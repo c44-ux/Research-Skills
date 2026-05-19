@@ -1,0 +1,619 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Evidence-Based Personas: Gold Standard Checklist</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Serif+Display:ital@0;1&family=DM+Sans:wght@300;400;500;600&display=swap');
+  :root {
+    --ink: #1a1a2e; --ink-muted: #4a4a6a; --ink-faint: #8888aa;
+    --surface: #fafaf8; --surface-2: #f2f1ed; --surface-3: #e8e6df;
+    --accent: #2d5be3; --accent-light: #eef1fd;
+    --amber: #c17f24; --amber-light: #fdf4e3;
+    --teal: #0f6e56; --teal-light: #e3f5ef;
+    --coral: #993c1d; --coral-light: #fdf0eb;
+    --red: #b91c1c; --red-light: #fef2f2;
+    --border: #dddbd3; --check-done: #0f6e56;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: 'DM Sans', sans-serif; background: var(--surface); color: var(--ink); line-height: 1.6; font-size: 15px; }
+  .page { max-width: 880px; margin: 0 auto; padding: 3rem 2rem 5rem; }
+
+  .header { border-bottom: 2px solid var(--ink); padding-bottom: 2rem; margin-bottom: 2.5rem; }
+  .header-eyebrow { font-size: 11px; font-weight: 600; letter-spacing: 0.12em; text-transform: uppercase; color: var(--ink-faint); margin-bottom: 0.75rem; }
+  .header h1 { font-family: 'DM Serif Display', serif; font-size: 2.4rem; line-height: 1.15; margin-bottom: 0.75rem; }
+  .header p { color: var(--ink-muted); max-width: 640px; font-size: 14px; line-height: 1.8; }
+  .source-pills { display: flex; gap: 8px; flex-wrap: wrap; margin-top: 1rem; }
+  .source-pill { display: inline-block; font-size: 11px; background: var(--surface-3); color: var(--ink-muted); padding: 4px 12px; border-radius: 2px; font-weight: 500; }
+
+  .progress-bar-wrap { background: var(--surface-3); border-radius: 3px; height: 6px; margin: 1.5rem 0 0.4rem; overflow: hidden; }
+  .progress-bar-fill { height: 100%; background: var(--accent); border-radius: 3px; transition: width 0.3s ease; width: 0%; }
+  .progress-label { font-size: 12px; color: var(--ink-faint); }
+  .progress-label span { color: var(--accent); font-weight: 500; }
+
+  .nav-tabs { display: flex; border-bottom: 1.5px solid var(--border); margin-bottom: 2.5rem; overflow-x: auto; }
+  .tab-btn { background: none; border: none; padding: 0.6rem 1rem; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 500; color: var(--ink-faint); cursor: pointer; border-bottom: 2.5px solid transparent; margin-bottom: -1.5px; white-space: nowrap; transition: color 0.15s, border-color 0.15s; }
+  .tab-btn:hover { color: var(--ink); }
+  .tab-btn.active { color: var(--accent); border-bottom-color: var(--accent); }
+
+  .section { display: none; }
+  .section.active { display: block; }
+
+  .section-intro { font-size: 13.5px; color: var(--ink-muted); line-height: 1.8; margin-bottom: 2rem; padding: 1rem 1.25rem; background: var(--surface-2); border-radius: 5px; border-left: 3px solid var(--accent); }
+  .section-intro strong { color: var(--ink); }
+
+  .checklist-group { margin-bottom: 2rem; }
+  .group-header { display: flex; align-items: center; gap: 10px; margin-bottom: 1rem; padding-bottom: 0.6rem; border-bottom: 1px solid var(--border); }
+  .group-num { width: 26px; height: 26px; border-radius: 50%; background: var(--ink); color: white; font-size: 11px; font-weight: 600; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .group-num.warn { background: var(--red); }
+  .group-title { font-size: 14px; font-weight: 600; color: var(--ink); }
+  .group-badge { margin-left: auto; font-size: 11px; color: var(--ink-faint); font-weight: 400; }
+
+  .checklist-item { display: flex; gap: 12px; align-items: flex-start; padding: 10px 12px; border-radius: 4px; margin-bottom: 4px; cursor: pointer; transition: background 0.1s; }
+  .checklist-item:hover { background: var(--surface-2); }
+  .checklist-item.done { background: #f0faf6; }
+  .checkbox { width: 18px; height: 18px; border: 1.5px solid var(--border); border-radius: 3px; flex-shrink: 0; margin-top: 2px; display: flex; align-items: center; justify-content: center; transition: all 0.15s; background: white; }
+  .checklist-item.done .checkbox { background: var(--check-done); border-color: var(--check-done); }
+  .check-mark { display: none; color: white; font-size: 12px; font-weight: 700; }
+  .checklist-item.done .check-mark { display: block; }
+  .item-label { font-size: 14px; font-weight: 500; color: var(--ink); line-height: 1.4; }
+  .checklist-item.done .item-label { color: var(--ink-faint); text-decoration: line-through; text-decoration-color: #aaa; }
+  .item-note { font-size: 12px; color: var(--ink-faint); margin-top: 3px; line-height: 1.5; }
+  .item-tag { display: inline-block; font-size: 10px; padding: 2px 7px; border-radius: 2px; font-weight: 600; letter-spacing: 0.04em; text-transform: uppercase; margin-right: 5px; }
+  .tag-quant { background: var(--accent-light); color: var(--accent); }
+  .tag-qual { background: var(--amber-light); color: var(--amber); }
+  .tag-mixed { background: var(--teal-light); color: var(--teal); }
+  .tag-critical { background: #fdecea; color: #c0392b; }
+  .tag-ai { background: #f0e6ff; color: #6b21a8; }
+  .tag-eval { background: var(--surface-3); color: var(--ink-muted); }
+
+  .methods-grid { display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .method-card { border: 1px solid var(--border); border-radius: 6px; padding: 1.1rem 1.25rem; background: white; cursor: pointer; transition: border-color 0.15s; }
+  .method-card:hover { border-color: var(--accent); }
+  .method-card.expanded { border-color: var(--accent); }
+  .method-card-header { display: flex; align-items: center; gap: 8px; margin-bottom: 8px; }
+  .method-icon { width: 32px; height: 32px; border-radius: 4px; display: flex; align-items: center; justify-content: center; font-size: 16px; flex-shrink: 0; }
+  .method-title { font-size: 14px; font-weight: 600; }
+  .method-period { font-size: 11px; color: var(--ink-faint); margin-top: 1px; }
+  .method-desc { font-size: 12.5px; color: var(--ink-muted); line-height: 1.6; margin-bottom: 8px; }
+  .method-pros-cons { display: none; margin-top: 10px; border-top: 1px solid var(--border); padding-top: 10px; }
+  .method-card.expanded .method-pros-cons { display: block; }
+  .pro-con-row { display: flex; gap: 8px; font-size: 12px; margin-bottom: 5px; align-items: flex-start; }
+  .pc-label { font-size: 10px; font-weight: 700; letter-spacing: 0.06em; width: 34px; flex-shrink: 0; margin-top: 1px; }
+  .pc-label.pro { color: var(--teal); }
+  .pc-label.con { color: var(--coral); }
+  .pc-text { color: var(--ink-muted); line-height: 1.5; }
+
+  .good-bad-ugly { display: grid; grid-template-columns: repeat(auto-fit, minmax(220px, 1fr)); gap: 1rem; margin-bottom: 2rem; }
+  .gbu-card { border: 1px solid var(--border); border-radius: 6px; padding: 1.1rem 1.25rem; background: white; }
+  .gbu-title { font-size: 13px; font-weight: 700; margin-bottom: 0.75rem; padding-bottom: 0.5rem; border-bottom: 1px solid var(--border); }
+  .gbu-card.good .gbu-title { color: var(--teal); }
+  .gbu-card.bad .gbu-title { color: var(--amber); }
+  .gbu-card.ugly .gbu-title { color: var(--red); }
+  .gbu-list { list-style: none; }
+  .gbu-list li { font-size: 12px; color: var(--ink-muted); line-height: 1.6; padding: 3px 0; border-bottom: 0.5px solid var(--surface-3); }
+  .gbu-list li:last-child { border-bottom: none; }
+
+  .pg-table { width: 100%; border-collapse: collapse; font-size: 13px; margin-bottom: 2rem; }
+  .pg-table th { text-align: left; padding: 8px 12px; background: var(--surface-2); font-weight: 600; font-size: 11px; text-transform: uppercase; letter-spacing: 0.05em; color: var(--ink-muted); border-bottom: 1px solid var(--border); }
+  .pg-table td { padding: 10px 12px; border-bottom: 0.5px solid var(--border); vertical-align: top; line-height: 1.5; }
+  .pg-table tr:last-child td { border-bottom: none; }
+  .pg-code { font-family: monospace; font-size: 11px; background: var(--surface-2); padding: 2px 6px; border-radius: 3px; color: var(--accent); }
+
+  .gap-list { display: grid; gap: 0.75rem; margin-bottom: 2rem; }
+  .gap-item { display: flex; gap: 14px; align-items: flex-start; padding: 14px 16px; border: 1px solid var(--border); border-radius: 5px; border-left: 3px solid var(--coral); background: white; }
+  .gap-letter { width: 24px; height: 24px; background: var(--coral-light); color: var(--coral); border-radius: 3px; font-size: 12px; font-weight: 700; display: flex; align-items: center; justify-content: center; flex-shrink: 0; }
+  .gap-title { font-size: 14px; font-weight: 600; margin-bottom: 3px; }
+  .gap-desc { font-size: 13px; color: var(--ink-muted); line-height: 1.6; }
+
+  .reading-list { display: grid; gap: 0.85rem; }
+  .reading-item { padding: 14px 16px; border: 1px solid var(--border); border-radius: 5px; background: white; border-left: 3px solid var(--accent); }
+  .reading-item.secondary { border-left-color: var(--amber); }
+  .reading-item.foundational { border-left-color: var(--teal); }
+  .reading-item.new { border-left-color: #6b21a8; }
+  .reading-priority { font-size: 10px; font-weight: 700; letter-spacing: 0.1em; text-transform: uppercase; margin-bottom: 4px; color: var(--accent); }
+  .reading-item.secondary .reading-priority { color: var(--amber); }
+  .reading-item.foundational .reading-priority { color: var(--teal); }
+  .reading-item.new .reading-priority { color: #6b21a8; }
+  .reading-title { font-size: 13.5px; font-weight: 600; color: var(--ink); margin-bottom: 3px; }
+  .reading-authors { font-size: 12px; color: var(--ink-faint); margin-bottom: 4px; font-style: italic; }
+  .reading-why { font-size: 12.5px; color: var(--ink-muted); line-height: 1.6; }
+
+  .reset-btn { font-family: 'DM Sans', sans-serif; font-size: 12px; background: none; border: 1px solid var(--border); border-radius: 3px; padding: 5px 14px; color: var(--ink-muted); cursor: pointer; float: right; margin-bottom: 1rem; }
+  .reset-btn:hover { color: var(--ink); border-color: var(--ink-muted); }
+</style>
+</head>
+<body>
+<div class="page">
+
+  <div class="header">
+    <div class="header-eyebrow">Gold Standard Research Reference — Updated 2025</div>
+    <h1>Evidence-Based Personas<br><em style="font-style:italic;color:var(--ink-muted);">Checklist &amp; Method Guide</em></h1>
+    <p>Grounded in two systematic reviews spanning 158 data-driven and GenAI persona research articles. Use this guide to ensure your AI-assisted persona workflow meets current academic and industry standards.</p>
+    <div class="source-pills">
+      <span class="source-pill">Salminen et al. (2021) — 15 Years of Data-Driven Persona Development — DOI: 10.1080/10447318.2021.1908670</span>
+      <span class="source-pill">Amin et al. (2025) — GenAI Personas: Scoping Review of 81 Articles — arXiv:2504.04927v2</span>
+    </div>
+    <div class="progress-bar-wrap">
+      <div class="progress-bar-fill" id="progressFill"></div>
+    </div>
+    <div class="progress-label">Checklist progress: <span id="progressText">0 of 0 items</span></div>
+  </div>
+
+  <div class="nav-tabs" role="tablist">
+    <button class="tab-btn active" onclick="showTab('checklist', this)">Checklist</button>
+    <button class="tab-btn" onclick="showTab('methods', this)">Methods</button>
+    <button class="tab-btn" onclick="showTab('genai', this)">GenAI guardrails</button>
+    <button class="tab-btn" onclick="showTab('gaps', this)">Research gaps</button>
+    <button class="tab-btn" onclick="showTab('reading', this)">Further reading</button>
+  </div>
+
+  <!-- ===== CHECKLIST ===== -->
+  <div id="tab-checklist" class="section active">
+    <div class="section-intro">
+      <strong>How to use:</strong> Click each item to mark it complete. Tags indicate method type: <span class="item-tag tag-quant">Quant</span> <span class="item-tag tag-qual">Qual</span> <span class="item-tag tag-mixed">Mixed</span> <span class="item-tag tag-ai">GenAI</span> <span class="item-tag tag-critical">Critical</span>. GenAI-specific items are new from Amin et al. (2025).
+    </div>
+    <button class="reset-btn" onclick="resetChecklist()">Reset all</button>
+    <div style="clear:both"></div>
+
+    <!-- Group 1: Decision & data readiness -->
+    <div class="checklist-group">
+      <div class="group-header">
+        <div class="group-num">1</div>
+        <div class="group-title">Decision &amp; data readiness</div>
+        <div class="group-badge" id="badge-1">0/6</div>
+      </div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-critical">Critical</span>Confirm you have the minimum viable evidence base</div><div class="item-note">≥10 behavioral records OR ≥3 interviews. Below these thresholds, produce a pattern summary only — not a named persona profile.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-mixed">Mixed</span>Write the research question in one sentence</div><div class="item-note">If you cannot, the scope is too broad. Vague questions produce misleading segments.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-mixed">Mixed</span>Define the population boundary explicitly</div><div class="item-note">Who is in scope, who is not. Ambiguous populations produce misleading segments.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-critical">Critical</span>Confirm personas are the right artefact for this question</div><div class="item-note">Consider: JTBD for task flows, journey maps for emotional experience, segmentation reports for sizing. Personas need a team that will actively use them.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-ai">GenAI</span>If using AI generation: declare the accessibility-quality paradox to stakeholders</div><div class="item-note">Amin et al. (2025): GenAI lowers creation barriers but evaluation still requires expertise. 45% of reviewed articles had no evaluation framework. Ease of generation does not reduce the evaluation obligation.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-mixed">Mixed</span>Conduct inclusivity pre-check before data collection</div><div class="item-note">Which groups are over-represented? Which are absent? Is community validation planned for marginalised populations?</div></div></div>
+    </div>
+
+    <!-- Group 2: Research planning -->
+    <div class="checklist-group">
+      <div class="group-header">
+        <div class="group-num">2</div>
+        <div class="group-title">Research planning &amp; source selection</div>
+        <div class="group-badge" id="badge-2">0/5</div>
+      </div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-mixed">Mixed</span>Select source types appropriate to the research question</div><div class="item-note">Analytics → behavioural patterns only. Survey → behavioural + optional demographics. Interview → motivations, goals, quotes. Do not cross capabilities.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-quant">Quant</span>Verify sample sizes meet directional confidence thresholds</div><div class="item-note">Analytics/survey: ≥30 records. Interviews: 8–12 sessions for thematic saturation. Below these, label outputs as hypothesis-generating only.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-quant">Quant</span>Map data collection instruments to generator field schema</div><div class="item-note">usage_frequency, features_used, primary_device, usage_context, pain_points — always. Optional fields (age, tech_confidence) in survey only.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-ai">GenAI</span>If using synthetic data: label it explicitly and plan real-user validation</div><div class="item-note">Amin et al. (2025): 32% of GenAI persona articles used synthetic data. LLMs generate US-centric, elite-skewed personas from synthetic input without geographic constraints. Synthetic data ≠ real user research.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-mixed">Mixed</span>Declare the minimum signal threshold for this study</div><div class="item-note">Default is 3 occurrences. Raise to 5+ for high-stakes design decisions. Document this decision before analysis begins.</div></div></div>
+    </div>
+
+    <!-- Group 3: Quantitative analysis -->
+    <div class="checklist-group">
+      <div class="group-header">
+        <div class="group-num">3</div>
+        <div class="group-title">Quantitative segmentation &amp; analysis</div>
+        <div class="group-badge" id="badge-3">0/5</div>
+      </div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-quant">Quant</span>Run behavioral pattern analysis across all behavioral sources</div><div class="item-note">Usage frequency, device, context, features, pain points. Read raw distributions before the summary — the summary is derived from them.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-quant">Quant</span>Validate cluster stability and internal coherence</div><div class="item-note">For algorithmic segmentation: silhouette scores, Davies–Bouldin index, or within-cluster sum of squares. Document algorithm and hyperparameters.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-quant">Quant</span>Surface optional fields only when present in source data</div><div class="item-note">Age, tech_confidence, location_type — show as distributions with source label. Never infer from proxy signals. Declare absent fields explicitly.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-ai">GenAI</span>Check AI-generated demographic outputs for LLM default bias</div><div class="item-note">Amin et al. (2025): LLMs skew US-centric, elite-educated, and majority demographic. Compare generated distributions to real user data (PG4). Document deviations.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-mixed">Mixed</span>Generate example segments as emergent, overlapping, illustrative slices</div><div class="item-note">Not persona types. The most common observed combinations of frequency, device, and context. A user may fit multiple segments over time.</div></div></div>
+    </div>
+
+    <!-- Group 4: Qualitative enrichment -->
+    <div class="checklist-group">
+      <div class="group-header">
+        <div class="group-num">4</div>
+        <div class="group-title">Qualitative enrichment</div>
+        <div class="group-badge" id="badge-4">0/5</div>
+      </div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-qual">Qual</span>Conduct user interviews to enrich quantitative segments</div><div class="item-note">Salminen et al. (2021) Gap E: purely data-driven approaches risk losing in-depth user insights. Interviews ground the numbers in real human context.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-qual">Qual</span>Add only explicitly stated goals, needs, and motivations</div><div class="item-note">Every qualitative claim traces to an interview quote or stated response. "Inferred from behaviour" is not a valid source for motivation claims.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="item-tag"></span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-ai">GenAI</span>If LLM used for thematic analysis: document it as an AIEnrichmentRecord</div><div class="item-note">Record stage, model, version, prompt reference, and whether outputs were validated against source transcripts (PG3). Unvalidated AI thematic outputs are hallucination candidates.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-critical">Critical</span>Verify all qualitative claims are grounded in real data — not LLM inference</div><div class="item-note">Muller &amp; Seaborn (2025): Potemkin personas appear real but are staged computational artifacts. Every attribute must trace to a specific source record.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-qual">Qual</span>Include only real interview quotes — never fabricated defaults</div><div class="item-note">If no interviews were conducted, the quotes field is empty. An LLM-generated "representative quote" is a fabrication.</div></div></div>
+    </div>
+
+    <!-- Group 5: Profile craft -->
+    <div class="checklist-group">
+      <div class="group-header">
+        <div class="group-num">5</div>
+        <div class="group-title">Profile craft</div>
+        <div class="group-badge" id="badge-5">0/6</div>
+      </div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-mixed">Mixed</span>Use a descriptive behavioural label, not a fictional archetype name</div><div class="item-note">"Daily desktop user — work context, broad feature use" not "Alex the Power User". Archetype names assign identity before examining data.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-quant">Quant</span>Show optional demographic fields as distributions with source label</div><div class="item-note">"Age: 26–38, mean 31 — Q3 survey, n=28". Never assign a single age or tech confidence value to a persona profile.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-critical">Critical</span>Ensure photos and illustrative names reflect the actual demographic distribution</div><div class="item-note">Default AI-generated images skew majority demographics. This is a documented bias pattern. Challenge any default choice.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-mixed">Mixed</span>Write scenarios grounded in observed data — not invented context</div><div class="item-note">Context from usage_context distribution. Goal from needs_and_goals block. Friction from frustrations block. If data doesn't support a scenario, don't write one.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-ai">GenAI</span>Include AI involvement in the profile footer</div><div class="item-note">Which stages used LLM assistance, which models, and which prompt version (PG3). This is required for reproducibility and stakeholder trust (Amin et al., 2025).</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-critical">Critical</span>Include a condensed limitations block in every profile footer</div><div class="item-note">Data sources with record counts, confidence note, top 2–3 limitations, and date. This is non-negotiable — it distinguishes an evidence-based profile from a Potemkin persona.</div></div></div>
+    </div>
+
+    <!-- Group 6: Governance -->
+    <div class="checklist-group">
+      <div class="group-header">
+        <div class="group-num">6</div>
+        <div class="group-title">Governance &amp; maintenance</div>
+        <div class="group-badge" id="badge-6">0/5</div>
+      </div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-mixed">Mixed</span>Assign an owner responsible for updates</div><div class="item-note">Every output must have a named owner. Without one, persona maintenance does not happen and stale outputs accumulate as liabilities.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-mixed">Mixed</span>Document the intended use — which decisions this output informs</div><div class="item-note">Personas made for one purpose get misapplied to others. Stating intended use limits scope creep and prevents downstream misuse.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-mixed">Mixed</span>Record the date of the most recent evidence source</div><div class="item-note">Jung et al. (2019): significant persona drift occurs over two years. Evidence older than 12 months with a changed product should be treated as expired until re-validated.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-mixed">Mixed</span>Define the review triggers for this output</div><div class="item-note">Review when: product changes materially, new behaviours emerge in data, evidence contradicts the model, or team is making a new class of decision not covered by the original brief.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-critical">Critical</span>Do not treat the output as static doctrine</div><div class="item-note">A persona that is never updated is not a research asset — it is a liability. Commit to a review cadence before publishing, not after the first time someone questions it.</div></div></div>
+    </div>
+
+    <!-- Group 7: Evaluation -->
+    <div class="checklist-group">
+      <div class="group-header">
+        <div class="group-num warn">7</div>
+        <div class="group-title">Evaluation (most under-resourced stage)</div>
+        <div class="group-badge" id="badge-7">0/8</div>
+      </div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-eval">Eval</span>Evaluate persona description quality using the Persona Perception Scale (PPS)</div><div class="item-note">Salminen et al. (2020). Five dimensions: consistency, clarity, completeness, credibility, fluency. Validated instrument for profile quality assessment.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-eval">Eval</span>Evaluate persona behaviour: does it act consistently with real user patterns?</div><div class="item-note">Amin et al. (2025): behaviour evaluation asks whether personas act like real humans — distinct from whether they look credible. Test decision-making accuracy against real user data.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-eval">Eval</span>Evaluate outcomes and impact: do team decisions improve when using the persona?</div><div class="item-note">Task-based evaluation: give team members a design question, compare decisions made with vs. without the persona. Measure usability with SUS if deploying a persona system.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-ai">GenAI</span>Perform hallucination check: trace every factual claim to a source record</div><div class="item-note">Amin et al. (2025): only 11.5% of reviewed articles address hallucination. Claims without a traceable source record are hallucination candidates. Remove or label as speculative.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-ai">GenAI</span>Perform consistency testing: run the generator 3× and compare outputs (PG6)</div><div class="item-note">Attributes that shift substantially across runs are unstable and likely partially hallucinated. Unstable outputs should not be used in design decisions without further validation.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-ai">GenAI</span>Avoid circularity: use a different model (or human evaluators) for evaluation</div><div class="item-note">Amin et al. (2025): using the same LLM to generate and evaluate personas tests model-specific patterns, not genuine quality. This is a documented validity threat.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-ai">GenAI</span>Validate against demographic benchmarks or real user data (PG4)</div><div class="item-note">Compare age, geographic, and occupational distributions in generated personas against your actual user base. Document deviations. LLM defaults overrepresent elite universities and US geographies.</div></div></div>
+      <div class="checklist-item" onclick="toggle(this)"><div class="checkbox"><span class="check-mark">✓</span></div><div class="item-content"><div class="item-label"><span class="item-tag tag-critical">Critical</span>Apply PG7 human oversight: domain expert review before design use</div><div class="item-note">Non-negotiable. For personas representing marginalised or vulnerable populations, community representatives must be involved. No fully automated pipeline should make design decisions without human review.</div></div></div>
+    </div>
+
+  </div><!-- end checklist -->
+
+  <!-- ===== METHODS ===== -->
+  <div id="tab-methods" class="section">
+    <div class="section-intro">
+      Salminen et al. (2021) identified three historical periods in data-driven persona development. Amin et al. (2025) documents a fourth: <strong>Augmentation</strong> (2022–present), where GenAI augments rather than replaces human involvement. Click any card to expand.
+    </div>
+    <div class="methods-grid" id="methodsGrid">
+      <div class="method-card" onclick="toggleMethod(this)">
+        <div class="method-card-header"><div class="method-icon" style="background:#eef1fd;color:#2d5be3;">📊</div><div><div class="method-title">K-means clustering</div><div class="method-period">Period 1 — Quantification (2005–2008)</div></div></div>
+        <div class="method-desc">Partitions users into k clusters based on behavioural or demographic variables. Most dominant method 2009–2014.</div>
+        <div class="method-pros-cons">
+          <div class="pro-con-row"><span class="pc-label pro">PRO</span><span class="pc-text">Simple, interpretable, scales to large datasets</span></div>
+          <div class="pro-con-row"><span class="pc-label con">CON</span><span class="pc-text">Requires pre-specifying k; sensitive to outliers; assumes spherical clusters</span></div>
+        </div>
+      </div>
+      <div class="method-card" onclick="toggleMethod(this)">
+        <div class="method-card-header"><div class="method-icon" style="background:#fdf4e3;color:#c17f24;">🔤</div><div><div class="method-title">Latent Semantic Analysis (LSA)</div><div class="method-period">Period 1 — Quantification</div></div></div>
+        <div class="method-desc">Derives segments from text corpora (support tickets, reviews) by identifying latent topic structures.</div>
+        <div class="method-pros-cons">
+          <div class="pro-con-row"><span class="pc-label pro">PRO</span><span class="pc-text">Excellent for text-rich datasets; uncovers latent themes</span></div>
+          <div class="pro-con-row"><span class="pc-label con">CON</span><span class="pc-text">Cannot incorporate behavioural metrics; requires large text corpus</span></div>
+        </div>
+      </div>
+      <div class="method-card" onclick="toggleMethod(this)">
+        <div class="method-card-header"><div class="method-icon" style="background:#e3f5ef;color:#0f6e56;">🧮</div><div><div class="method-title">Non-negative Matrix Factorisation (NMF)</div><div class="method-period">Periods 2–3</div></div></div>
+        <div class="method-desc">Factorises the user-behaviour matrix into non-negative components, each a user archetype. Basis of the APG system.</div>
+        <div class="method-pros-cons">
+          <div class="pro-con-row"><span class="pc-label pro">PRO</span><span class="pc-text">Handles mixed behavioural + demographic data; soft memberships; gold-standard APG</span></div>
+          <div class="pro-con-row"><span class="pc-label con">CON</span><span class="pc-text">Less interpretable than k-means; requires non-negative matrices</span></div>
+        </div>
+      </div>
+      <div class="method-card" onclick="toggleMethod(this)">
+        <div class="method-card-header"><div class="method-icon" style="background:#fdf4e3;color:#c17f24;">📋</div><div><div class="method-title">Survey-based (Survey2Persona)</div><div class="method-period">Period 3 — Digitalization</div></div></div>
+        <div class="method-desc">Generates personas from survey data. PersonaCraft (Jung et al., 2025) integrates LLMs into this pipeline with empirical evaluation.</div>
+        <div class="method-pros-cons">
+          <div class="pro-con-row"><span class="pc-label pro">PRO</span><span class="pc-text">Accessible; surveys provide rich qualitative context; no analytics access needed</span></div>
+          <div class="pro-con-row"><span class="pc-label con">CON</span><span class="pc-text">Survey responses may be biased; smaller samples than analytics</span></div>
+        </div>
+      </div>
+      <div class="method-card" onclick="toggleMethod(this)">
+        <div class="method-card-header"><div class="method-icon" style="background:#f0e6ff;color:#6b21a8;">🤖</div><div><div class="method-title">LLM-assisted generation</div><div class="method-period">Period 4 — Augmentation (2022–present)</div></div></div>
+        <div class="method-desc">LLMs generate persona narratives from structured data, interview transcripts, or synthetic inputs. 86% of GenAI persona research uses GPT models.</div>
+        <div class="method-pros-cons">
+          <div class="pro-con-row"><span class="pc-label pro">PRO</span><span class="pc-text">Compresses timelines; enables narrative richness; interactive/conversational personas</span></div>
+          <div class="pro-con-row"><span class="pc-label con">CON</span><span class="pc-text">Hallucination risk; single-vendor dependency; 45% of research lacks evaluation; US-centric bias</span></div>
+        </div>
+      </div>
+      <div class="method-card" onclick="toggleMethod(this)">
+        <div class="method-card-header"><div class="method-icon" style="background:#fdf0eb;color:#993c1d;">👥</div><div><div class="method-title">Manual / interview-based (enrichment)</div><div class="method-period">All periods — qualitative layer</div></div></div>
+        <div class="method-desc">Contextual enquiry, in-depth interviews, ethnographic observation. Used to enrich quantitative or AI-generated segments with human insight.</div>
+        <div class="method-pros-cons">
+          <div class="pro-con-row"><span class="pc-label pro">PRO</span><span class="pc-text">Captures nuance, motivation, and emotion that algorithms miss; builds empathy</span></div>
+          <div class="pro-con-row"><span class="pc-label con">CON</span><span class="pc-text">Not scalable; researcher bias possible; cannot be replaced by LLM inference</span></div>
+        </div>
+      </div>
+    </div>
+
+    <div style="margin-top:2rem">
+      <div class="section-intro" style="border-left-color: #6b21a8;">
+        <strong>Four GenAI innovation types</strong> identified by Amin et al. (2025): input source innovations (multimodal, unstructured data), process innovations (direct attribute specification, segmentation-free approaches, automated pipelines), prompt engineering innovations (two-stage prompting, few-shot learning, chain-of-thought), and output format innovations (narrative-driven, multimodal, interactive/conversational personas). Each carries distinct evaluation requirements.
+      </div>
+    </div>
+  </div>
+
+  <!-- ===== GENAI GUARDRAILS ===== -->
+  <div id="tab-genai" class="section">
+    <div class="section-intro">
+      Seven practical guidelines from Amin et al. (2025) Table 8, plus three additional risks identified in the review. These apply whenever LLMs are used at any stage of persona development.
+    </div>
+
+    <div class="good-bad-ugly">
+      <div class="gbu-card good">
+        <div class="gbu-title">✓ The Good</div>
+        <ul class="gbu-list">
+          <li>Compresses timelines from weeks to hours</li>
+          <li>Enables conversational/interactive personas</li>
+          <li>Improves resource sharing and reproducibility</li>
+          <li>Enables iterative human-AI co-creation</li>
+          <li>New agentic personas that simulate behaviour</li>
+          <li>Multimodal representation formats</li>
+        </ul>
+      </div>
+      <div class="gbu-card bad">
+        <div class="gbu-title">⚠ The Bad</div>
+        <ul class="gbu-list">
+          <li>45% of articles lack evaluation frameworks</li>
+          <li>86% use only GPT — single-vendor dependency</li>
+          <li>Only 11.5% address hallucination detection</li>
+          <li>Evaluation practices are ad hoc and fragmented</li>
+          <li>Accessibility-quality paradox: easy to create, hard to validate</li>
+        </ul>
+      </div>
+      <div class="gbu-card ugly">
+        <div class="gbu-title">✗ The Ugly</div>
+        <ul class="gbu-list">
+          <li>42% of articles report no human-AI collaboration</li>
+          <li>Fully automated pipelines erase real users</li>
+          <li>Potemkin personas: staged, not grounded</li>
+          <li>Shifts control from communities to algorithms</li>
+          <li>Reduced semantic diversity vs. human-crafted personas</li>
+          <li>Synthetic data → AI generation → AI evaluation = closed loop</li>
+        </ul>
+      </div>
+    </div>
+
+    <table class="pg-table">
+      <thead>
+        <tr>
+          <th>Guideline</th>
+          <th>Requirement</th>
+          <th>Implementation</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td><strong>PG1</strong> Multi-model validation</td>
+          <td>Use ≥2 different GenAI systems for validation. Different models exhibit distinct biases.</td>
+          <td>If using Claude for generation, validate key outputs against GPT or Gemini, or against real user data.</td>
+        </tr>
+        <tr>
+          <td><strong>PG2</strong> Structured output formats</td>
+          <td>Deploy JSON/CSV with explicit consistency criteria for programmatic validation.</td>
+          <td><span class="pg-code">python persona_generator.py json</span></td>
+        </tr>
+        <tr>
+          <td><strong>PG3</strong> Prompt documentation</td>
+          <td>Document prompts, parameters, model versions, and dates. Prompt sensitivity significantly affects outputs.</td>
+          <td>Use <span class="pg-code">AIEnrichmentRecord</span> to capture stage, model, prompt_reference per source.</td>
+        </tr>
+        <tr>
+          <td><strong>PG4</strong> Demographic benchmarking</td>
+          <td>Validate against real user data. LLM-generated personas systematically deviate from real populations.</td>
+          <td>Compare optional_fields distributions to real user analytics. Flag US-centric or elite skew.</td>
+        </tr>
+        <tr>
+          <td><strong>PG5</strong> Acceptance thresholds</td>
+          <td>Pre-register quality criteria before generating to prevent confirmation bias.</td>
+          <td>Set <span class="pg-code">min_signal_count</span> before running. Define PPS score threshold before evaluating.</td>
+        </tr>
+        <tr>
+          <td><strong>PG6</strong> Consistency testing</td>
+          <td>Run generator 3× on same data. High variability = unstable representations.</td>
+          <td>Attributes that shift across runs are hallucination candidates. Do not use in design decisions.</td>
+        </tr>
+        <tr>
+          <td><strong>PG7</strong> Human oversight</td>
+          <td>Domain expert or community review before design use. Automated methods miss cultural details.</td>
+          <td>Non-negotiable for marginalised populations. At least one human checkpoint per phase.</td>
+        </tr>
+        <tr>
+          <td><strong>Anti-circularity</strong></td>
+          <td>Do not use the same LLM to generate and evaluate. Tests model patterns, not genuine quality.</td>
+          <td>Use a different model or human evaluators for evaluation phase.</td>
+        </tr>
+        <tr>
+          <td><strong>Anti-Potemkin</strong></td>
+          <td>Every attribute must trace to a source record. Staged personas appear real but aren't grounded.</td>
+          <td>Muller &amp; Seaborn (2025): apply source-tracing check before profile release.</td>
+        </tr>
+        <tr>
+          <td><strong>Hallucination check</strong></td>
+          <td>Trace every factual claim to a source record before use.</td>
+          <td>Flag unvalidated AI-enriched stages in <span class="pg-code">ai_involvement</span> output block.</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <!-- ===== GAPS ===== -->
+  <div id="tab-gaps" class="section">
+    <div class="section-intro">
+      Five gaps from Salminen et al. (2021) remain active — Amin et al. (2025) confirms most persist in the GenAI era, with some showing early progress (resource sharing improved) and others worsening (evaluation gaps deepened).
+    </div>
+    <div class="gap-list">
+      <div class="gap-item"><div class="gap-letter">A</div><div><div class="gap-title">Shared resources and provenance</div><div class="gap-desc">Most data-driven persona research shared no datasets, code, or prompts. GenAI research shows improvement — 61% share at least one resource type — but 38% still share nothing. The DataSource registry and AIEnrichmentRecord in <code>persona_generator.py</code> address this directly.</div></div></div>
+      <div class="gap-item"><div class="gap-letter">B</div><div><div class="gap-title">Evaluation methods</div><div class="gap-desc">This is the deepest ongoing gap. 45% of GenAI persona articles (Amin et al., 2025) have no evaluation framework. Evaluation must cover four targets: description quality, behavioural consistency, generation process, and outcomes/impact. Using PPS alone is insufficient.</div></div></div>
+      <div class="gap-item"><div class="gap-letter">C</div><div><div class="gap-title">Standardisation</div><div class="gap-desc">No agreed lifecycle, terminology, or reporting standard exists. GenAI adds new variation: LLM family, version, temperature, prompt strategy. The output schema in <code>persona_generator.py</code> is the reference implementation for this skill.</div></div></div>
+      <div class="gap-item"><div class="gap-letter">D</div><div><div class="gap-title">Inclusivity and algorithmic fairness</div><div class="gap-desc">GenAI amplifies this gap. Amin et al. (2025) documents: algorithmic othering, elite institution overrepresentation, gender and age bias, platform-specific sampling bias, and AI exacerbation of existing stereotypes. 80% of personas in one study showed stereotypical bias. Community validation is required for marginalised populations.</div></div></div>
+      <div class="gap-item"><div class="gap-letter">E</div><div><div class="gap-title">Risk of losing in-depth user insights</div><div class="gap-desc">The "Ugly" risk identified by Amin et al.: fully automated pipelines erase real users. 42% of GenAI persona articles have no human-AI collaboration model. Qualitative enrichment and human oversight remain non-negotiable. Interview evidence must be preserved separately from behavioural aggregates.</div></div></div>
+    </div>
+
+    <div class="section-intro" style="margin-top:2rem; border-left-color: var(--teal);">
+      <strong>Additional anti-patterns from practice (File 2 methodology):</strong> beyond the five Salminen gaps, practitioner methodology identifies three further failure modes: the <em>Archetype Trap</em> (forcing users into power/casual/business/mobile-first before examining data), <em>Confidence Theater</em> (a formula creating the appearance of rigour without real rigour — replace numeric scoring with transparent confidence notes), and the <em>Output-First Mistake</em> (optimising for the artifact rather than the decision it should support — state the decision upfront and remove components that don't serve it).
+    </div>
+
+    <div class="section-intro" style="border-left-color: var(--amber);">
+      <strong>Three-part pre-publication checklist (File 2):</strong><br><br>
+      <strong>Research quality:</strong> Research question is clear · ≥2 evidence sources used · Major claims are traceable · Contradictions documented · Weak signals labelled as tentative<br><br>
+      <strong>Synthesis quality:</strong> Patterns described before categories proposed · Segments are clearly warranted · Example segments are overlapping and illustrative · No fabricated names, photos, or quotes · Psychographic claims directly evidenced or omitted · Output distinguishes observation from interpretation<br><br>
+      <strong>Decision quality:</strong> Output helps the team make a real decision · Design implications are evidence-linked with "because" fields · Limitations are stated clearly · Confidence expressed as a note, not a formula · Output includes owner, intended use, and review trigger
+    </div>
+  </div>
+
+  <!-- ===== FURTHER READING ===== -->
+  <div id="tab-reading" class="section">
+    <div class="section-intro">
+      Organised by priority. New from Amin et al. (2025) are marked with a purple border.
+    </div>
+    <div class="reading-list">
+
+      <div class="reading-item new">
+        <div class="reading-priority">New — essential GenAI framework</div>
+        <div class="reading-title">Creating and Evaluating Personas Using Generative AI: A Scoping Review of 81 Articles</div>
+        <div class="reading-authors">Amin, Salminen, Ahmed, Tervola, Sethi &amp; Jansen — arXiv:2504.04927v2, 2025</div>
+        <div class="reading-why">The primary update to this skill. Systematic review of 81 GenAI persona articles 2022–2025. Source of the Good/Bad/Ugly framework, seven practical guidelines (PG1–PG7), and the accessibility-quality paradox. Read alongside Salminen et al. (2021).</div>
+      </div>
+
+      <div class="reading-item">
+        <div class="reading-priority">Essential — foundational survey</div>
+        <div class="reading-title">A Survey of 15 Years of Data-Driven Persona Development</div>
+        <div class="reading-authors">Salminen, Guan, Jung &amp; Jansen — IJHCI, 2021</div>
+        <div class="reading-why">The systematic review underlying this skill's five research gaps. Reviews 77 data-driven persona articles 2005–2020. Still the foundational reference for method selection, evaluation standards, and the three historical periods of DDPD.</div>
+      </div>
+
+      <div class="reading-item new">
+        <div class="reading-priority">New — current state of the art</div>
+        <div class="reading-title">PersonaCraft: Leveraging Language Models for Data-Driven Persona Development</div>
+        <div class="reading-authors">Jung, Salminen, Aldous &amp; Jansen — IJHCS, 2025</div>
+        <div class="reading-why">The most current empirically evaluated LLM-assisted persona system. Integrates data collection, analysis, and generation into a unified pipeline with proper evaluation. Reference implementation for survey-based GenAI persona generation.</div>
+      </div>
+
+      <div class="reading-item">
+        <div class="reading-priority">Essential — methodology</div>
+        <div class="reading-title">A Literature Review of Quantitative Persona Creation</div>
+        <div class="reading-authors">Salminen, Guan, Jung, Chowdhury &amp; Jansen — CHI, 2020</div>
+        <div class="reading-why">Direct precursor to the 2021 survey. Systematic categorisation of quantitative methods. Read first for method selection guidance.</div>
+      </div>
+
+      <div class="reading-item secondary">
+        <div class="reading-priority">Important — evaluation instrument</div>
+        <div class="reading-title">Persona Perception Scale</div>
+        <div class="reading-authors">Salminen, Santos, Kwak, An, Jung &amp; Jansen — IJHCS, 2020</div>
+        <div class="reading-why">Validated instrument for measuring persona profile quality across credibility, completeness, clarity, consistency, and fluency. Required for Phase 5 description evaluation.</div>
+      </div>
+
+      <div class="reading-item new">
+        <div class="reading-priority">New — critical risk paper</div>
+        <div class="reading-title">Stepford Twins and Potemkin Engineering: A Critique of Synthetic Personas</div>
+        <div class="reading-authors">Muller &amp; Seaborn — Synthetic Data Workshop, Aarhus, 2025</div>
+        <div class="reading-why">Defines the Potemkin persona concept — profiles staged to appear real but disconnected from actual users. Essential reading before any AI-assisted profile craft step.</div>
+      </div>
+
+      <div class="reading-item new">
+        <div class="reading-priority">New — human-AI workflow</div>
+        <div class="reading-title">Understanding Human-AI Workflows for Generating Personas</div>
+        <div class="reading-authors">Shin, Hedderich, Rey, Lucero &amp; Oulasvirta — DIS, 2024</div>
+        <div class="reading-why">Defines three collaboration models: LLM-auto (fully automated), LLM-grouping (human selects characteristics), LLM-summarizing (human clusters, LLM writes narratives). Provides a practical taxonomy for choosing a human-AI collaboration level.</div>
+      </div>
+
+      <div class="reading-item secondary">
+        <div class="reading-priority">Important — bias and fairness</div>
+        <div class="reading-title">Rethinking Personas for Fairness: Algorithmic Transparency and Accountability</div>
+        <div class="reading-authors">Salminen, Jung, Chowdhury &amp; Jansen — 2020</div>
+        <div class="reading-why">Introduces persona fairness as a concept. Proposes methods for auditing algorithmic bias. Directly addresses Gap D.</div>
+      </div>
+
+      <div class="reading-item secondary">
+        <div class="reading-priority">Important — hallucination in HCI</div>
+        <div class="reading-title">Evaluating LLMs in Generating Synthetic HCI Research Data: A Case Study</div>
+        <div class="reading-authors">Hämäläinen, Tavast &amp; Kunnari — CHI, 2023</div>
+        <div class="reading-why">Empirical evidence of hallucination risk in LLM-generated HCI research data. Directly relevant to Phase 3 hallucination detection and Phase 5 validation requirements.</div>
+      </div>
+
+      <div class="reading-item secondary">
+        <div class="reading-priority">Important — demographic bias evidence</div>
+        <div class="reading-title">Evaluation of LLM Biases Towards Elite Universities: A Persona-Based Exploration</div>
+        <div class="reading-authors">Gupta &amp; Ranjan — arXiv, 2024</div>
+        <div class="reading-why">Documents that LLM-generated personas overrepresent elite universities (72% in generated vs. 8.6% in actual data). Directly motivates PG4 demographic benchmarking.</div>
+      </div>
+
+      <div class="reading-item foundational">
+        <div class="reading-priority">Foundational</div>
+        <div class="reading-title">The Inmates Are Running the Asylum / About Face 3</div>
+        <div class="reading-authors">Cooper, A. — 1999 / 2007</div>
+        <div class="reading-why">The origin of the persona methodology. Provides the conceptual and philosophical foundation that all subsequent data-driven and GenAI work builds upon or critiques.</div>
+      </div>
+
+      <div class="reading-item foundational">
+        <div class="reading-priority">Foundational</div>
+        <div class="reading-title">The Persona Lifecycle: Keeping People in Mind Throughout Product Design</div>
+        <div class="reading-authors">Pruitt, J. &amp; Adlin, T. — Morgan Kaufmann, 2006</div>
+        <div class="reading-why">The most comprehensive qualitative persona creation guide. Defines the lifecycle model that data-driven and AI-assisted research augments rather than replaces.</div>
+      </div>
+
+    </div>
+  </div>
+
+</div><!-- end page -->
+
+<script>
+  const STORAGE_KEY = 'persona_checklist_v2';
+
+  function showTab(name, btn) {
+    document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(b => b.classList.remove('active'));
+    document.getElementById('tab-' + name).classList.add('active');
+    btn.classList.add('active');
+  }
+
+  function toggle(el) {
+    el.classList.toggle('done');
+    saveState();
+    updateProgress();
+  }
+
+  function toggleMethod(card) {
+    card.classList.toggle('expanded');
+  }
+
+  function resetChecklist() {
+    document.querySelectorAll('.checklist-item').forEach(i => i.classList.remove('done'));
+    saveState();
+    updateProgress();
+  }
+
+  function updateProgress() {
+    const items = document.querySelectorAll('.checklist-item');
+    const done = document.querySelectorAll('.checklist-item.done');
+    const pct = items.length ? Math.round((done.length / items.length) * 100) : 0;
+    document.getElementById('progressFill').style.width = pct + '%';
+    document.getElementById('progressText').textContent = done.length + ' of ' + items.length + ' items (' + pct + '%)';
+
+    const groups = document.querySelectorAll('.checklist-group');
+    groups.forEach((g, idx) => {
+      const groupItems = g.querySelectorAll('.checklist-item');
+      const groupDone = g.querySelectorAll('.checklist-item.done');
+      const badge = document.getElementById('badge-' + (idx + 1));
+      if (badge) badge.textContent = groupDone.length + '/' + groupItems.length;
+    });
+  }
+
+  function saveState() {
+    const states = [];
+    document.querySelectorAll('.checklist-item').forEach(el => {
+      states.push(el.classList.contains('done') ? 1 : 0);
+    });
+    try { localStorage.setItem(STORAGE_KEY, JSON.stringify(states)); } catch(e) {}
+  }
+
+  function loadState() {
+    try {
+      const saved = localStorage.getItem(STORAGE_KEY);
+      if (!saved) return;
+      const states = JSON.parse(saved);
+      document.querySelectorAll('.checklist-item').forEach((el, i) => {
+        if (states[i]) el.classList.add('done');
+      });
+    } catch(e) {}
+    updateProgress();
+  }
+
+  loadState();
+  updateProgress();
+</script>
+</body>
+</html>
