@@ -1,6 +1,11 @@
 # Evidence-based behaviour archetype creation (UX)
 
-Cursor skill for **UX and product research**: build segment-level **behaviour archetypes** from **surveys** and/or **interviews** — any domain, not tied to accounting or a specific product.
+Cursor skill for **UX and product research**: build segment-level **behaviour archetypes** with data from **surveys** and/or **interviews**.
+
+Use your own survey or interview data
+Skill produces evidence based archetype synthesis (local files)
+Publish it to your own Miro — either a new board, or to an existing URL that you provide
+
 
 ## What’s in this repo
 
@@ -75,3 +80,6 @@ Phase 3 uses `PersonaGenerator` from sibling skill **`cs-ux-personas`**:
 
 - Raw survey files with respondent rows  
 - API keys / `.env`
+
+## Attribution
+Evidence-based behaviour archetype creation.md is adapted from community methodology content (see file header for original source reference).
