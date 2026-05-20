@@ -1,17 +1,26 @@
 # Evidence-based behaviour archetype creation (UX)
 
-Cursor skill for **UX and product research**: build segment-level **behaviour archetypes** from **surveys** and/or **interviews** — any domain, not tied to accounting or a specific product.
+Cursor skill for **UX and product research**: build **your** segment-level **behaviour archetypes** from **your** surveys and/or interviews, then **publish to your own Miro** — any domain. No shared boards, no bundled study data, no organisation-specific defaults.
 
 ## What’s in this repo
 
 | Path | Purpose |
 |------|---------|
-| `SKILL.md` | Agent instructions (qual + quant paths, output structure) |
-| `docs/` | Principles, methodology, HTML checklist |
+| `SKILL.md` | Agent instructions (synthesis + Miro delivery) |
+| `docs/` | Principles, methodology, checklist, `miro_delivery_guide.md` |
 | `scripts/` | Survey Phase 3 pipeline; optional segment reports |
 | `requirements.txt` | Python deps for survey scripts (`pandas`, `openpyxl`) |
 
 **No bundled survey maps.** Each study gets its own `<survey>.column_mapping.csv` beside the export.
+
+## End-to-end flow
+
+```text
+Survey / interviews  →  Synthesis (local .md / .json)  →  Miro board (Miro MCP in Cursor)
+```
+
+- **GitHub** stores this skill only — not your study data and not Miro content.
+- **Miro** is the usual stakeholder deliverable. The agent uses **Miro MCP** to write into **your** Miro account — either on a board URL you paste, or on a **new board** it creates after you approve (not via git push).
 
 ## Install
 
@@ -22,13 +31,18 @@ git clone https://github.com/c44-ux/Research-Skills.git `
 
 Use folder: `Research-Skills/evidence-based-behaviour-archetype-creation/`
 
+Optional: copy that folder to `%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation\` if you prefer a flat skills path (update paths in commands accordingly).
+
 ## How researchers use it
 
-| You have | What to do |
-|----------|------------|
-| **Interview transcripts / notes** | Open in Cursor with this skill — agent follows `SKILL.md` + `docs/` (no Python required) |
-| **Survey .xlsx / .csv** | Run Phase 3 scripts below after mapping columns |
-| **Both** | Survey via Phase 3; interviews via agent; triangulate only where evidence supports it |
+| Step | What you do |
+|------|-------------|
+| **1. Install** | Clone this repo; open the skill folder in Cursor. For surveys: `pip install -r requirements.txt` and install sibling skill **`cs-ux-personas`** under `.cursor\skills\`. Enable **Miro MCP** in Cursor if you want board delivery. |
+| **2. Your data** | Add **your** interview materials or survey export locally (never commit raw respondent data). |
+| **3. Synthesise** | **Interviews:** agent follows `SKILL.md` + `docs/` (no Python). **Survey:** build `.column_mapping.csv`, then run Phase 3 scripts (below). **Both:** survey scripts + agent; triangulate only where evidence supports it. |
+| **4. Miro (optional)** | Ask the agent for **Miro delivery** — it publishes to **your** Miro only: approve a **new board**, or paste **your** board URL. No shared or default boards. See [Miro delivery](#miro-delivery). |
+
+**Outputs:** synthesis files beside your survey or in chat; stakeholder board in **your** Miro workspace when you run step 4.
 
 ## Survey pipeline (Python)
 
@@ -60,6 +74,17 @@ python scripts/phase3_from_survey_xlsx.py --segment-detail "C:\path\to\survey.xl
 ```
 
 Requires a mapped segment column (`segment_primary`, `usage_context`, or `segment`).
+
+## Miro delivery
+
+After synthesis, use Cursor with **Miro MCP** enabled and signed in to Miro. Ask the agent to run **Miro delivery** (`SKILL.md` / `docs/miro_delivery_guide.md`).
+
+| Option | What you do |
+|--------|-------------|
+| **New board** | Say e.g. “Create a new Miro board for this study” and confirm when asked |
+| **Existing board** | Paste your board URL and say e.g. “Add archetypes to this board” |
+
+The skill does not publish to GitHub or a central shared board — only to boards in **your** Miro workspace.
 
 ## Dependency
 
