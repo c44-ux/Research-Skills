@@ -105,4 +105,32 @@ Phase 3 uses `PersonaGenerator` from sibling skill **`cs-ux-personas`**:
 
 ## Attribution
 
-Evidence-based behaviour archetype methodology is adapted from community research content (see file headers in `docs/` for original source references).
+### Upstream: `cs-ux-personas` (survey Phase 3)
+
+Survey quant analysis calls **`PersonaGenerator`** from the separate sibling skill **`cs-ux-personas`** (`scripts/persona_generator.py`). Install it next to this folder under `.cursor/skills/`. That module’s header cites **Salminen et al. (2021)** for data-driven persona development standards; this skill depends on it for pattern aggregation but does not redistribute its source.
+
+### Methodology sources
+
+Evidence standards and evaluation criteria in `docs/` are grounded in:
+
+- **Salminen, J., et al. (2021).** *A Survey of 15 Years of Data-Driven Persona Development.* IJHCI. DOI: [10.1080/10447318.2021.1908670](https://doi.org/10.1080/10447318.2021.1908670)
+- **Amin, D., et al. (2025).** *Creating and Evaluating Personas Using Generative AI: A Scoping Review of 81 Articles.* arXiv:2504.04927v2
+
+The interactive **`docs/evidence_based_behaviour_archetypes_checklist.html`** translates those reviews into phase-by-phase peer-review-style checks (evidence base, GenAI risks, inclusivity, evaluation).
+
+### Core adaptations in this skill (Clare Reddan / c44-ux)
+
+This repository is **not** a copy of `cs-ux-personas`. It packages a **UX research workflow** with deliberate changes to reduce bias and misuse of AI-assisted synthesis:
+
+| Area | What changed |
+|------|----------------|
+| **Artefact** | **Behaviour archetypes** (segment-level, evidence-counted) — not fictional named persona cards or stock identity. |
+| **Scope** | **Domain-neutral** — no bundled survey maps, product-specific column maps, or default Miro boards; each study ships its own `.column_mapping.csv` beside the export. |
+| **Survey path** | `phase3_from_survey_xlsx.py` + mapping template, optional `segment_pains` / `segment_detail` — segment **labels come from respondent data**, never hard-coded from another study. |
+| **Qual / mixed** | Interview and survey claims stay **separate** unless the researcher explicitly triangulates; real quotes only. |
+| **Bias & GenAI guardrails** | `SKILL.md` + `docs/Evidence based behaviour_archetype_principles.md` enforce evidence-before-inference, minimum thresholds, limitations/confidence blocks, no demographic invention, design implications with explicit “because” links, and documented AI involvement (aligned with Amin et al. PG1–PG7). |
+| **Peer-review checklist** | HTML checklist maps Salminen gaps and GenAI evaluation obligations to actionable steps before sharing with stakeholders. |
+| **Delivery** | **`docs/miro_delivery_guide.md`** — publish to **the current user’s** Miro via MCP only (new board with approval, or their URL); no shared repo boards. |
+| **Agent workflow** | Cursor `SKILL.md` paths for qual-only, quant-only, and mixed methods, plus Miro tenancy rules (no reusing board URLs from other projects or chats). |
+
+Earlier community methodology content informed `docs/`; file headers note where prose was adapted. **Your study data and boards stay local** — GitHub stores methodology and scripts only.
