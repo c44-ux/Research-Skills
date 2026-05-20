@@ -43,19 +43,19 @@ DEFAULT_METADATA_PREFIXES = [
 CHECKLIST_HTML = SCRIPT_DIR.parent / "docs" / "evidence_based_behaviour_archetypes_checklist.html"
 GENERATOR = SCRIPT_DIR.parents[1] / "cs-ux-personas" / "scripts" / "persona_generator.py"
 
+# Substrings in open-text answers that suggest tools or channels (extend per domain).
 TOOL_KEYWORDS = [
-    "xero",
-    "myob",
-    "quickbooks",
     "spreadsheet",
     "excel",
-    "expensify",
-    "receipt",
-    "bank feed",
     "google sheet",
-    "zoho",
-    "freshbooks",
-    "accounting software",
+    "mobile",
+    "phone",
+    "app",
+    "software",
+    "saas",
+    "cloud",
+    "desktop",
+    "laptop",
 ]
 
 # Optional pain-column heuristics seeded into a new mapping template (edit per survey).
@@ -259,6 +259,10 @@ def _load_survey_plan_from_csv(columns: list[str], map_path: Path) -> SurveyPlan
                 if header in colset:
                     plan.exact[field] = header
                     plan.all_used_columns.append(header)
+            elif map_type == "supplemental" and field:
+                if header in colset:
+                    plan.supplemental[field] = header
+                    plan.all_used_columns.append(header)
             elif map_type == "group_parent" and field:
                 group_parents[field] = header
             elif map_type == "skip":
@@ -281,10 +285,6 @@ def _load_survey_plan_from_csv(columns: list[str], map_path: Path) -> SurveyPlan
         if any(h in cl for h in pain_hints):
             plan.pain_columns.append(col)
             plan.all_used_columns.append(col)
-
-    for key in ("accountant_frequency", "accountant_relationship"):
-        if key in plan.exact:
-            plan.supplemental[key] = plan.exact[key]
 
     return plan
 
@@ -318,9 +318,10 @@ def _load_survey_plan_from_json(columns: list[str], map_path: Path) -> SurveyPla
             plan.pain_columns.append(col)
             plan.all_used_columns.append(col)
 
-    for key in ("accountant_frequency", "accountant_relationship"):
-        if key in plan.exact:
-            plan.supplemental[key] = plan.exact[key]
+    for field, header in cfg.get("supplemental_columns", {}).items():
+        if header in colset:
+            plan.supplemental[field] = header
+            plan.all_used_columns.append(header)
 
     return plan
 
@@ -410,7 +411,7 @@ def export_mapping_template(survey_path: Path, force: bool = False) -> Path:
 
     if force or not out.is_file():
         rows_out: list[dict[str, str]] = [
-            {"behaviour_archetype_field": "", "map_type": "", "survey_column_header": "# map_type: exact | group_parent | skip | pain_contains", "active": "", "notes": ""},
+            {"behaviour_archetype_field": "", "map_type": "", "survey_column_header": "# map_type: exact | group_parent | supplemental | skip | pain_contains", "active": "", "notes": ""},
             {
                 "behaviour_archetype_field": "",
                 "map_type": "",
@@ -421,7 +422,7 @@ def export_mapping_template(survey_path: Path, force: bool = False) -> Path:
             {
                 "behaviour_archetype_field": "",
                 "map_type": "",
-                "survey_column_header": "# Suggested fields: usage_context, routine_text, goals, motivations, values, occupation (your survey may differ)",
+                "survey_column_header": "# UX-oriented examples: segment_primary, usage_context, goals, needs, motivations, values, task_narrative, tools_used, pain_contains",
                 "active": "",
                 "notes": "",
             },
@@ -583,7 +584,7 @@ def collect_group_selections(row, columns: list[str], parent: str) -> list[str]:
 def row_to_record(row, plan: SurveyPlan, idx: int) -> dict:
     rec: dict = {"user_id": f"survey_{idx}"}
 
-    routine_col = plan.exact.get("routine_text")
+    routine_col = plan.exact.get("task_narrative") or plan.exact.get("routine_text")
     routine_text = ""
     if routine_col:
         v = row_get(row, routine_col)
@@ -610,22 +611,12 @@ def row_to_record(row, plan: SurveyPlan, idx: int) -> dict:
         if device:
             rec["primary_device"] = device
 
-    sw_col = plan.exact.get("software")
-    if sw_col:
+    tools_col = plan.exact.get("tools_used") or plan.exact.get("software")
+    if tools_col:
         rec.setdefault("features_used", [])
-        for tool in split_multi(row_get(row, sw_col)):
+        for tool in split_multi(row_get(row, tools_col)):
             if tool.lower() not in [f.lower() for f in rec["features_used"]]:
                 rec["features_used"].append(tool)
-
-    admin_col = plan.exact.get("admin_approach")
-    if admin_col:
-        v = row_get(row, admin_col)
-        if v is not None:
-            # Stated admin model (e.g. DIY vs delegated) — keep as goal-adjacent signal
-            admin = str(v).strip()
-            rec.setdefault("goals", [])
-            if admin not in rec["goals"]:
-                rec["goals"].append(admin)
 
     if plan.exact.get("goals"):
         v = row_get(row, plan.exact["goals"])
@@ -872,6 +863,32 @@ def main() -> None:
             "Usage: python phase3_from_survey_xlsx.py --export-mapping-template <path-to-survey.xlsx|.csv>",
         )
         export_mapping_template(survey_path, force=bool(opts.get("force")))
+        return
+
+    if pos and pos[0] == "--segment-detail":
+        rest = [p for p in pos[1:] if not p.startswith("--")]
+        survey_path = _require_survey_path(
+            rest,
+            "Usage: python phase3_from_survey_xlsx.py --segment-detail <path-to-survey.xlsx|.csv>",
+        )
+        try:
+            import pandas as pd  # noqa: F401
+        except ImportError:
+            import subprocess
+
+            subprocess.check_call([sys.executable, "-m", "pip", "install", "pandas", "openpyxl", "-q"])
+        df = load_survey_dataframe(survey_path)
+        plan = load_survey_plan([str(c) for c in df.columns], survey_path=survey_path)
+        from segment_detail_profiles import compute_segment_detail_profiles, render_segment_detail_markdown
+
+        detail = compute_segment_detail_profiles(df, plan, row_get, split_multi)
+        md = render_segment_detail_markdown(detail)
+        out_md = survey_path.with_name(survey_path.stem + ".segment_detail.md")
+        out_json = survey_path.with_name(survey_path.stem + ".segment_detail.json")
+        out_md.write_text(md, encoding="utf-8")
+        out_json.write_text(json.dumps(detail, indent=2), encoding="utf-8")
+        print(f"Wrote: {out_md}")
+        print(f"Wrote: {out_json}")
         return
 
     if pos and pos[0] == "--segment-pains":

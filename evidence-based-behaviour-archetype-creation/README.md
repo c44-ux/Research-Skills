@@ -1,74 +1,69 @@
-# Evidence-based behaviour archetype creation
+# Evidence-based behaviour archetype creation (UX)
 
-Cursor skill and scripts for **segment-level behaviour archetypes** from research data — not fictional named personas.
+Cursor skill for **UX and product research**: build segment-level **behaviour archetypes** from **surveys** and/or **interviews** — any domain, not tied to accounting or a specific product.
 
 ## What’s in this repo
 
 | Path | Purpose |
 |------|---------|
-| `SKILL.md` | Cursor agent skill (methodology + output structure) |
-| `docs/` | Principles, methodology guide, HTML checklist |
-| `scripts/` | Phase 3 survey pipeline, segment pains, employee-band profiles |
+| `SKILL.md` | Agent instructions (qual + quant paths, output structure) |
+| `docs/` | Principles, methodology, HTML checklist |
+| `scripts/` | Survey Phase 3 pipeline; optional segment reports |
 
-There is **no bundled survey mapping**. Every study has different questions; mapping is created per export.
+**No bundled survey maps.** Each study gets its own `<survey>.column_mapping.csv` beside the export.
 
-## Install (Cursor)
-
-Clone into your Cursor skills folder:
+## Install
 
 ```powershell
 git clone https://github.com/c44-ux/Research-Skills.git `
   "$env:USERPROFILE\.cursor\skills\Research-Skills"
 ```
 
-Then use the skill at `Research-Skills/evidence-based-behaviour-archetype-creation/`, or clone/copy only that subfolder into `.cursor\skills\`.
+Use folder: `Research-Skills/evidence-based-behaviour-archetype-creation/`
 
-## Surveys vs interviews
+## How researchers use it
 
-| Input | How to use this skill |
-|-------|------------------------|
-| **Survey** (`.xlsx` / `.csv`) | Run Phase 3 scripts below after you build a **per-survey** `.column_mapping.csv` |
-| **Interviews** | Follow `SKILL.md` and `docs/` — synthesise from transcripts/notes in the agent; no column mapping file |
+| You have | What to do |
+|----------|------------|
+| **Interview transcripts / notes** | Open in Cursor with this skill — agent follows `SKILL.md` + `docs/` (no Python required) |
+| **Survey .xlsx / .csv** | Run Phase 3 scripts below after mapping columns |
+| **Both** | Survey via Phase 3; interviews via agent; triangulate only where evidence supports it |
 
-Phase 3 is **survey-only**. Interview evidence is handled through the methodology (separate from survey columns, never merged without triangulation).
-
-## Python (Phase 3)
+## Survey pipeline (Python)
 
 ```powershell
 pip install pandas openpyxl
-```
+cd path\to\evidence-based-behaviour-archetype-creation
 
-### 1. Export mapping template (once per survey file)
-
-```powershell
+# 1) Create mapping template from YOUR export
 python scripts/phase3_from_survey_xlsx.py --export-mapping-template "C:\path\to\survey.xlsx"
-```
 
-Creates `survey.column_mapping.csv` beside your data. Open in Excel and map your question headers to fields (`usage_context`, `goals`, `pain_contains`, etc.).
+# 2) Edit survey.column_mapping.csv in Excel (map headers → fields like segment_primary, goals, pain_contains)
 
-### 2. Run Phase 3
-
-```powershell
+# 3) Generate archetype markdown + JSON
 python scripts/phase3_from_survey_xlsx.py "C:\path\to\survey.xlsx"
 ```
 
-Writes next to the survey file:
+Optional:
 
-- `<survey>.behaviour_archetype_phase3.md`
-- `<survey>.behaviour_archetype_phase3.analysis.json`
+```powershell
+python scripts/phase3_from_survey_xlsx.py --segment-pains "C:\path\to\survey.xlsx"
+python scripts/phase3_from_survey_xlsx.py --segment-detail "C:\path\to\survey.xlsx"
+```
 
-## Dependency: `cs-ux-personas`
+Requires a mapped segment column (`segment_primary`, `usage_context`, or `segment`).
 
-Phase 3 calls **`PersonaGenerator`** from the sibling skill `cs-ux-personas` (`scripts/persona_generator.py`).
+## Dependency
+
+Phase 3 uses `PersonaGenerator` from sibling skill **`cs-ux-personas`**:
 
 ```text
 .cursor/skills/
-  evidence-based-behaviour-archetype-creation/   ← this repo
-  cs-ux-personas/                                ← required for phase3_from_survey_xlsx.py
+  evidence-based-behaviour-archetype-creation/
+  cs-ux-personas/
 ```
 
 ## Do not commit
 
-- Raw survey CSV/XLSX with respondent data
-- Per-project `.column_mapping.csv` if it encodes confidential study design (optional — usually fine as structure-only)
-- API keys or `.env` files
+- Raw survey files with respondent rows  
+- API keys / `.env`

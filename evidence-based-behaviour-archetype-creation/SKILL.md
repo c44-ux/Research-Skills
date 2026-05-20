@@ -1,103 +1,103 @@
 ---
 name: evidence-based-behaviour-archetype-creation
-description: Create evidence-based behaviour archetypes from research inputs using a strict methodology. Use when the user asks for behaviour archetype creation, audience definition, user pattern synthesis, or UX research synthesis, especially when they provide source documents or ask for evidence-grounded profiles.
+description: UX research skill — create evidence-based behaviour archetypes from surveys, interviews, or mixed methods using a strict methodology. Use for user research synthesis, audience patterns, behavioural segments, or when the user says persona/archetype and provides study materials (any product domain).
 disable-model-invocation: true
 ---
 
-# Evidence-Based Behaviour Archetype Creation
+# Evidence-Based Behaviour Archetype Creation (UX)
 
 ## Purpose
 
-Use this skill to generate evidence-grounded **behaviour archetype** outputs from supplied research materials while avoiding fabricated details, weak-signal overreach, and unsupported demographic inference.
+Generate **evidence-grounded behaviour archetypes** for UX and product research from the user's actual study materials — any topic (B2B, consumer, internal tools, etc.).
 
-Do **not** produce traditional named personas (fictional identity cards). Produce **segment-level behaviour archetypes** backed by distributions and observed patterns.
+- **Not** fictional named personas or stock-photo identity cards.
+- **Yes** segment- or pattern-level profiles backed by counts, distributions, and traceable sources.
+- Works for **surveys** (quant) and **interviews** (qual), separately or triangulated.
 
 ## Required inputs
 
-Paths are relative to this skill folder (repo root when cloned from GitHub).
+Paths are relative to this skill folder.
 
-- Primary principles reference: `docs/Evidence based behaviour_archetype_principles.md`
-- Methodology workflow reference: `docs/behaviour_archetype_methodology_guide.md`
+- `docs/Evidence based behaviour_archetype_principles.md` — guardrails (non-negotiable)
+- `docs/behaviour_archetype_methodology_guide.md` — workflow and quality bar
 
-Optional:
-- Checklist reference (HTML): `docs/evidence_based_behaviour_archetypes_checklist.html`
+Optional: `docs/evidence_based_behaviour_archetypes_checklist.html`
 
-## Interviews and other qualitative sources
+## Two input paths
 
-When the user provides **interview transcripts, notes, or workshop outputs** (not a tabular survey), do **not** use Phase 3 scripts. Read `docs/` and produce behaviour archetype output directly from the supplied materials, keeping interview claims separate from any survey or analytics data unless explicitly triangulated.
+### A. Interviews, notes, workshops (qualitative)
 
-## Phase 3 (survey Excel)
+When the user supplies **transcripts, interview notes, diary studies, or workshop outputs**:
 
-When the user provides an `.xlsx` or `.csv` survey export, run locally (agent shell may not execute on Windows):
+1. Read both required docs first.
+2. **Do not** run Phase 3 scripts (they only apply to tabular survey exports).
+3. Synthesise archetypes in Markdown using the output structure below.
+4. Keep **interview claims separate** from survey/analytics unless the user explicitly triangulates.
+5. Use **real quotes only** — never invent “representative” quotes.
+
+### B. Survey export (quantitative)
+
+When the user supplies a **SurveyMonkey / Typeform / Qualtrics-style** `.xlsx` or `.csv`:
+
+1. Generate a per-study column map (once per file):
+
+```powershell
+python "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation\scripts\phase3_from_survey_xlsx.py" --export-mapping-template "C:\path\to\survey.xlsx"
+```
+
+2. User edits `<survey>.column_mapping.csv` in Excel — map **their** question headers to generic fields (`segment_primary`, `usage_context`, `goals`, `pain_contains`, etc.). No bundled maps ship with this skill.
+
+3. Run Phase 3:
 
 ```powershell
 python "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation\scripts\phase3_from_survey_xlsx.py" "C:\path\to\survey.xlsx"
 ```
 
-Writes `<survey>.behaviour_archetype_phase3.md` and `.behaviour_archetype_phase3.analysis.json` next to the workbook, with full skill sections and the HTML checklist appended.
+Outputs beside the survey: `*.behaviour_archetype_phase3.md` and `*.behaviour_archetype_phase3.analysis.json`.
 
-Column mapping is edited in Excel via **CSV** beside your survey file only:
-
-- `<survey-file>.column_mapping.csv` (generated per study — not shipped with this skill)
-
-Generate and populate the CSV with **every** survey column (merges into existing file, or use `--force` to rebuild):
+Optional segment reports (after mapping a segment column):
 
 ```powershell
-python "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation\scripts\phase3_from_survey_xlsx.py" --export-mapping-template "C:\path\to\survey.xlsx"
-python "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation\scripts\phase3_from_survey_xlsx.py" --export-mapping-template --force "C:\path\to\survey.xlsx"
+python "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation\scripts\phase3_from_survey_xlsx.py" --segment-pains "C:\path\to\survey.xlsx"
+python "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation\scripts\phase3_from_survey_xlsx.py" --segment-detail "C:\path\to\survey.xlsx"
 ```
 
-Inspect resolved mapping:
+Segment **labels** are read from survey answers — never hard-coded.
 
-```powershell
-python "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation\scripts\phase3_from_survey_xlsx.py" --list-columns "C:\path\to\survey.xlsx"
-```
+### C. Mixed methods
 
-## Workflow
+If both survey and interviews exist: produce survey-backed patterns from Phase 3 (or manual survey synthesis), interview enrichment separately, then a short triangulation section only where evidence aligns. Do not merge qual and quant into one claim without labeling both sources.
 
-1. Read both required Markdown files from `docs/` before producing any behaviour archetype output.
-2. Treat the principles file as non-negotiable guardrails.
-3. Treat the methodology guide as the execution sequence and quality standard.
-4. If the HTML checklist is available, include it in the final output as-is under a `## Checklist (HTML)` section.
-5. If a required source file is missing, stop and report exactly which file path could not be read.
+## Workflow (all paths)
+
+1. Read both required Markdown files from `docs/` before producing output.
+2. Confirm evidence thresholds (see methodology guide — e.g. minimum records or interviews).
+3. If the HTML checklist is available, append it under `## Checklist (HTML)` unchanged.
+4. If a required source file is missing, stop and report the exact path.
 
 ## Output requirements
 
-Produce a Markdown output with these sections:
+Markdown with:
 
-1. `## Evidence scope`
-   - Data/source summary
-   - Data quality caveats
-2. `## Observed patterns`
-   - Behavioral patterns only
-   - No fabricated identity
-3. `## Behaviour archetype profile`
-   - Evidence-grounded profile narrative (segment or pattern-level — not a named individual)
-   - Goals, needs, and frustrations tied to evidence
-4. `## Design implications`
-   - Each implication must include a brief "because" rationale tied to observed signals
-5. `## Limitations and confidence`
-   - Explicitly state uncertainties, contradictions, and weak signals
+1. `## Evidence scope` — sources, n, caveats  
+2. `## Observed patterns` — behaviour only, no invented identity  
+3. `## Behaviour archetype profile` — segment/pattern narrative; goals, needs, frustrations tied to evidence  
+4. `## Design implications` — each with a “because” linked to data  
+5. `## Limitations and confidence` — uncertainty and weak signals  
 6. `## Checklist (HTML)` (optional)
-   - Include the checklist HTML exactly as provided when available
 
 ## Guardrails
 
 - Never invent names, quotes, or demographics.
 - Never claim certainty when signals are weak.
-- Keep qualitative and quantitative claims clearly separated unless explicitly triangulated.
-- If using AI-assisted interpretation, explicitly label where AI was used.
-- Prefer "observed pattern" and "behaviour archetype" language over fictional customer identity.
+- Separate qualitative and quantitative claims unless triangulated.
+- Label any AI-assisted interpretation.
+- Prefer “observed pattern” / “behaviour archetype” over fictional customer identity.
 
 ## Trigger cues
 
-Apply this skill when user requests include phrases like:
-
-- "behaviour archetype creation"
-- "evidence-based behaviour archetype"
-- "target audience behaviour archetype"
-- "ux research synthesis"
-- "user behavior patterns"
-- "audience definition"
-
-(Legacy trigger: users may still say "persona" — treat that as behaviour archetype creation unless they explicitly want a named persona card.)
+- behaviour archetype / evidence-based archetype  
+- UX research synthesis / user research synthesis  
+- audience definition / behavioural segments  
+- survey + interview synthesis  
+- (Legacy: “persona” → behaviour archetype unless they want a named persona card)

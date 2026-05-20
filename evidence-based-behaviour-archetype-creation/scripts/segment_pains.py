@@ -1,31 +1,81 @@
-"""Compute pain-point and value distributions per survey segment."""
+"""Pain-point and value distributions per survey segment (domain-neutral)."""
 from __future__ import annotations
 
+import re
 from collections import Counter
 
-USAGE_CONTEXT_SEGMENTS: dict[str, str] = {
-    "as_it_happens": "I do expenses as they happen: log them straight away or in the same week",
-    "monthly_batch": "I do expenses in batches: save them up and batch process about once a month",
-    "bas_tax": "I leave expenses until BAS/tax time: I catch up once quarter or even less frequently than that",
-    "delegated": "I don\u2019t manage expenses: someone else handles it",
-}
-
-EMPLOYEE_SIZE_SEGMENTS: dict[str, str] = {
-    "sole_trader": "Just me (sole trader)",
-    "employees_2_4": "2\u20134 employees",
-    "employees_5_19": "5\u201319 employees",
-    "employees_20_plus": "20\u201399 employees",  # includes 100+ (n=1) when present
-}
-
-EMPLOYEE_SIZE_ALIASES: dict[str, str] = {
-    "100+ employees": "employees_20_plus",
-}
-
+# Substrings in column headers → pain source bucket (edit in code if your survey uses other wording).
 PAIN_SOURCE_HINTS: dict[str, str] = {
-    "take the most time": "most_time_consuming",
-    "hardest for you or your team": "hardest",
-    "difficulties or problems with your business expenses admin": "difficulties_frequency",
+    "take the most time": "time_consuming",
+    "most time-consuming": "time_consuming",
+    "most time consuming": "time_consuming",
+    "hardest": "hardest",
+    "most challenging": "hardest",
+    "biggest challenge": "hardest",
+    "how often": "difficulties_frequency",
+    "frequency": "difficulties_frequency",
+    "difficult": "difficulties_frequency",
+    "problem": "difficulties_frequency",
 }
+
+SEGMENT_FIELD_PRIORITY = (
+    "segment_primary",
+    "segment_secondary",
+    "usage_context",
+    "segment",
+)
+
+
+def _slug_key(label: str, used: set[str]) -> str:
+    base = re.sub(r"[^\w\s-]", "", str(label).lower())
+    base = re.sub(r"[-\s]+", "_", base).strip("_")[:60] or "segment"
+    key = base
+    n = 2
+    while key in used:
+        key = f"{base}_{n}"
+        n += 1
+    used.add(key)
+    return key
+
+
+def segment_defs_from_column(df, column: str, row_get) -> dict[str, str]:
+    """Build segment key → answer label from unique values in a mapped column."""
+    seen: set[str] = set()
+    defs: dict[str, str] = {}
+    for idx in range(len(df)):
+        raw = row_get(df.iloc[idx], column)
+        if raw is None:
+            continue
+        label = str(raw).strip()
+        if not label or label.lower() in ("nan", "none", "n/a"):
+            continue
+        if label in defs.values():
+            continue
+        key = _slug_key(label, seen)
+        defs[key] = label
+    return defs
+
+
+def segment_defs_from_records(records: list[dict], field: str = "usage_context") -> dict[str, str]:
+    seen: set[str] = set()
+    defs: dict[str, str] = {}
+    for rec in records:
+        label = str(rec.get(field) or "").strip()
+        if not label:
+            continue
+        if label in defs.values():
+            continue
+        key = _slug_key(label, seen)
+        defs[key] = label
+    return defs
+
+
+def resolve_segment_column(plan) -> str | None:
+    for name in SEGMENT_FIELD_PRIORITY:
+        col = plan.exact.get(name)
+        if col:
+            return col
+    return None
 
 
 def pain_source_key(column_name: str) -> str | None:
@@ -42,7 +92,7 @@ def is_frequency_pain(pain: str) -> bool:
         return True
     if "once a quarter" in sl or "few times a year" in sl:
         return True
-    if sl in {"daily", "weekly", "monthly", "rarely", "never", "often", "always", "tax"}:
+    if sl in {"daily", "weekly", "monthly", "rarely", "never", "often", "always"}:
         return True
     if "sometimes (" in sl or "very often" in sl or "almost daily" in sl:
         return True
@@ -56,14 +106,10 @@ def _row_pains_for_column(row, col: str, row_get, split_multi) -> list[str]:
     return [p.strip() for p in split_multi(v) if p.strip()]
 
 
-def _resolve_employee_size_key(raw: str) -> str | None:
-    raw = str(raw).strip()
-    if not raw:
-        return None
-    if raw in EMPLOYEE_SIZE_ALIASES:
-        return EMPLOYEE_SIZE_ALIASES[raw]
-    label_to_key = {label: key for key, label in EMPLOYEE_SIZE_SEGMENTS.items()}
-    return label_to_key.get(raw)
+def _source_label(src: str, columns_for_src: list[str]) -> str:
+    if columns_for_src:
+        return columns_for_src[0]
+    return src.replace("_", " ")
 
 
 def _build_segment_output(
@@ -73,6 +119,7 @@ def _build_segment_output(
     by_source: dict[str, dict[str, Counter]],
     values_counters: dict[str, Counter],
     top_n: int,
+    pain_cols_by_source: dict[str, list[str]],
 ) -> dict:
     def _top(counter: Counter, n: int, *, task_only: bool = True) -> list[dict]:
         items = []
@@ -88,12 +135,12 @@ def _build_segment_output(
     for key, label in segment_defs.items():
         n = segment_n.get(key, 0)
         sub: dict = {}
-        for src in ("most_time_consuming", "hardest", "difficulties_frequency"):
+        for src in pain_cols_by_source:
             if src not in by_source.get(key, {}):
                 continue
             task_only = src != "difficulties_frequency"
             sub[src] = {
-                "survey_question": _source_label(src),
+                "survey_question": _source_label(src, pain_cols_by_source.get(src, [])),
                 "items": _top(by_source[key][src], top_n, task_only=task_only),
             }
         out_segments[key] = {
@@ -132,6 +179,9 @@ def compute_segments_from_df(
             pain_cols_by_source.setdefault(key, []).append(col)
 
     values_col = plan.exact.get("values")
+    if not values_col and "values" in plan.groups:
+        block = plan.groups["values"]
+        values_col = block[0] if block else None
 
     segment_n = {key: 0 for key in segment_defs}
     combined = {key: Counter() for key in segment_defs}
@@ -165,68 +215,81 @@ def compute_segments_from_df(
 
     return {
         "segments": _build_segment_output(
-            segment_defs, segment_n, combined, by_source, values_counters, top_n
+            segment_defs,
+            segment_n,
+            combined,
+            by_source,
+            values_counters,
+            top_n,
+            pain_cols_by_source,
         ),
     }
 
 
-def compute_segment_pains_from_df(df, plan, row_to_record, row_get, split_multi, top_n: int = 6) -> dict:
-    """Usage-context segments (expense routine)."""
-    ctx_col = plan.exact.get("usage_context")
-    if not ctx_col:
-        raise ValueError("usage_context column not mapped")
+def compute_segment_pains_from_df(
+    df, plan, row_to_record, row_get, split_multi, top_n: int = 6, *, segment_col: str | None = None
+) -> dict:
+    """Pains and values per segment, using mapped segment column and answer labels from data."""
+    col = segment_col or resolve_segment_column(plan)
+    if not col:
+        return {
+            "segments": {},
+            "note": "No segment column mapped. Add segment_primary (or usage_context / segment) in .column_mapping.csv.",
+            "skipped": True,
+        }
+
+    segment_defs = segment_defs_from_column(df, col, row_get)
+    if not segment_defs:
+        return {
+            "segments": {},
+            "segment_column": col,
+            "note": f"No segment values found in column: {col}",
+            "skipped": True,
+        }
+
     out = compute_segments_from_df(
-        df, plan, row_get, split_multi, USAGE_CONTEXT_SEGMENTS, ctx_col, top_n=top_n
+        df, plan, row_get, split_multi, segment_defs, col, top_n=top_n
     )
-    out["note"] = "Pain counts per usage-context segment. Sub-lists match survey questions."
+    out["segment_column"] = col
+    out["note"] = "Pain counts per segment value in the mapped segment column (labels from survey data)."
     return out
 
 
-def compute_employee_size_segments_from_df(df, plan, row_get, split_multi, top_n: int = 6) -> dict:
-    """Business size by number of employees — pains and desired outcomes per size band."""
-    size_col = None
-    for col in df.columns:
-        if "size of your business" in str(col).lower():
-            size_col = col
-            break
-    if not size_col:
-        raise ValueError("Business size column not found (What is the size of your business?)")
-
-    out = compute_segments_from_df(
-        df,
-        plan,
-        row_get,
-        split_multi,
-        EMPLOYEE_SIZE_SEGMENTS,
-        size_col,
-        resolve_key=_resolve_employee_size_key,
-        top_n=top_n,
+def compute_segment_pains_secondary_from_df(
+    df, plan, row_get, split_multi, top_n: int = 6
+) -> dict:
+    """Optional second segmentation dimension (map segment_secondary in column mapping)."""
+    col = plan.exact.get("segment_secondary")
+    if not col:
+        return {
+            "segments": {},
+            "note": "segment_secondary not mapped — skipped.",
+            "skipped": True,
+        }
+    out = compute_segment_pains_from_df(
+        df, plan, None, row_get, split_multi, top_n=top_n, segment_col=col
     )
-    out["note"] = (
-        "Segmented by number of employees. Pains and desired outcomes are per size band only "
-        "(not pooled). 100+ employees rolled into 20–99 band when present."
-    )
-    out["segment_dimension"] = "employee_count"
+    out["segment_dimension"] = "segment_secondary"
     return out
 
 
-def _source_label(src: str) -> str:
-    labels = {
-        "most_time_consuming": "Which parts of managing expenses take the most time? (Pick up to 3)",
-        "hardest": "Which of these tasks are hardest for you or your team to manage?",
-        "difficulties_frequency": "How often do you have difficulties or problems with your business expenses admin?",
-    }
-    return labels.get(src, src)
+def compute_segment_pains(
+    records: list[dict],
+    segments: dict[str, str] | None = None,
+    *,
+    segment_field: str = "usage_context",
+    top_n: int = 8,
+) -> dict:
+    segments = segments or segment_defs_from_records(records, segment_field)
+    if not segments:
+        return {"segments": {}, "note": f"No values for field {segment_field!r} in records."}
 
-
-def compute_segment_pains(records: list[dict], segments: dict[str, str] | None = None, top_n: int = 8) -> dict:
-    segments = segments or USAGE_CONTEXT_SEGMENTS
     label_to_key = {label: key for key, label in segments.items()}
     counters: dict[str, Counter] = {key: Counter() for key in segments}
     segment_n: dict[str, int] = {key: 0 for key in segments}
 
     for rec in records:
-        ctx = rec.get("usage_context")
+        ctx = rec.get(segment_field)
         if not ctx:
             continue
         key = label_to_key.get(str(ctx).strip())
@@ -239,7 +302,11 @@ def compute_segment_pains(records: list[dict], segments: dict[str, str] | None =
                 continue
             counters[key][p] += 1
 
-    out: dict = {"segments": {}, "note": "Pain counts per usage-context segment only (not pooled)."}
+    out: dict = {
+        "segments": {},
+        "segment_field": segment_field,
+        "note": "Pain counts per segment value (from record field, not pooled).",
+    }
     for key, label in segments.items():
         pains = [{"pain": pain, "count": count} for pain, count in counters[key].most_common(top_n)]
         out["segments"][key] = {"label": label, "n": segment_n[key], "pains": pains}
