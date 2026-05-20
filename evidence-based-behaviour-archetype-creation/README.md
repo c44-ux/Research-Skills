@@ -40,7 +40,7 @@ Optional: copy that folder to `%USERPROFILE%\.cursor\skills\evidence-based-behav
 | Step | What you do |
 |------|-------------|
 | **1. Install** | Clone this repo; open the skill folder in Cursor. For surveys: `pip install -r requirements.txt` and install sibling skill **`cs-ux-personas`** under `.cursor\skills\`. Enable **Miro MCP** in Cursor if you want board delivery. |
-| **2. Your data** | Add **your** interview materials or survey export locally (never commit raw respondent data). |
+| **2. Your data** | Add **your** interview materials or survey export locally (never commit raw respondent data or PII raw data). |
 | **3. Synthesise** | **Interviews:** agent follows `SKILL.md` + `docs/` (no Python). **Survey:** build `.column_mapping.csv`, then run Phase 3 scripts (below). **Both:** survey scripts + agent; triangulate only where evidence supports it. |
 | **4. Miro (optional)** | Ask the agent for **Miro delivery** — it publishes to **your** Miro only: approve a **new board**, or paste **your** board URL. No shared or default boards. See [Miro delivery](#miro-delivery). |
 
