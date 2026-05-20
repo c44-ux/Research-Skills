@@ -14,7 +14,7 @@ Editable mapping table (open in Excel), beside your survey file:
 Generate it first:
   python phase3_from_survey_xlsx.py --export-mapping-template "<path-to.xlsx>"
 
-Requires: pandas, openpyxl
+Survey Python deps (one-time): pip install -r requirements.txt (in skill folder)
 """
 from __future__ import annotations
 
@@ -844,6 +844,10 @@ def _parse_cli_args(argv: list[str]) -> tuple[dict[str, str | bool], list[str]]:
 
 
 def main() -> None:
+    from survey_deps import ensure_survey_dependencies
+
+    ensure_survey_dependencies()
+
     args = [a for a in sys.argv[1:] if a]
     opts, pos = _parse_cli_args(args)
 
@@ -871,12 +875,6 @@ def main() -> None:
             rest,
             "Usage: python phase3_from_survey_xlsx.py --segment-detail <path-to-survey.xlsx|.csv>",
         )
-        try:
-            import pandas as pd  # noqa: F401
-        except ImportError:
-            import subprocess
-
-            subprocess.check_call([sys.executable, "-m", "pip", "install", "pandas", "openpyxl", "-q"])
         df = load_survey_dataframe(survey_path)
         plan = load_survey_plan([str(c) for c in df.columns], survey_path=survey_path)
         from segment_detail_profiles import compute_segment_detail_profiles, render_segment_detail_markdown
@@ -897,12 +895,6 @@ def main() -> None:
             rest,
             "Usage: python phase3_from_survey_xlsx.py --segment-pains <path-to-survey.xlsx|.csv>",
         )
-        try:
-            import pandas as pd  # noqa: F401
-        except ImportError:
-            import subprocess
-
-            subprocess.check_call([sys.executable, "-m", "pip", "install", "pandas", "openpyxl", "-q"])
         df = load_survey_dataframe(survey_path)
         plan = load_survey_plan([str(c) for c in df.columns], survey_path=survey_path)
         records = [row_to_record(df.iloc[i], plan, i) for i in range(len(df))]
@@ -928,13 +920,6 @@ def main() -> None:
         if len(positional) > 1
         else survey_path.with_suffix(".behaviour_archetype_phase3.md")
     )
-
-    try:
-        import pandas as pd  # noqa: F401
-    except ImportError:
-        import subprocess
-
-        subprocess.check_call([sys.executable, "-m", "pip", "install", "pandas", "openpyxl", "-q"])
 
     df = load_survey_dataframe(survey_path)
     columns = [str(c) for c in df.columns]

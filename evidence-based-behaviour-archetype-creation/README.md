@@ -9,6 +9,7 @@ Cursor skill for **UX and product research**: build segment-level **behaviour ar
 | `SKILL.md` | Agent instructions (qual + quant paths, output structure) |
 | `docs/` | Principles, methodology, HTML checklist |
 | `scripts/` | Survey Phase 3 pipeline; optional segment reports |
+| `requirements.txt` | Python deps for survey scripts (`pandas`, `openpyxl`) |
 
 **No bundled survey maps.** Each study gets its own `<survey>.column_mapping.csv` beside the export.
 
@@ -31,8 +32,15 @@ Use folder: `Research-Skills/evidence-based-behaviour-archetype-creation/`
 
 ## Survey pipeline (Python)
 
+**One-time setup** (from this skill folder):
+
 ```powershell
-pip install pandas openpyxl
+pip install -r requirements.txt
+```
+
+Also install sibling skill **`cs-ux-personas`** next to this folder under `.cursor\skills\`.
+
+```powershell
 cd path\to\evidence-based-behaviour-archetype-creation
 
 # 1) Create mapping template from YOUR export

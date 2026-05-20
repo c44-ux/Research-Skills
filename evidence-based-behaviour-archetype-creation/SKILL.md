@@ -39,6 +39,17 @@ When the user supplies **transcripts, interview notes, diary studies, or worksho
 
 When the user supplies a **SurveyMonkey / Typeform / Qualtrics-style** `.xlsx` or `.csv`:
 
+**Python prerequisites (one-time per machine)** — survey scripts need `pandas` and `openpyxl`. If the user has not installed them, say so explicitly and give:
+
+```powershell
+cd "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation"
+pip install -r requirements.txt
+```
+
+Phase 3 scripts also attempt a quiet `pip install` on first run if imports fail, but prefer telling the user to run the command above (clearer on locked-down PCs).
+
+Also requires sibling skill **`cs-ux-personas`** (for `PersonaGenerator`).
+
 1. Generate a per-study column map (once per file):
 
 ```powershell
