@@ -6,6 +6,31 @@ Upstream history: [vanessachang-dev/chat-synopsis/CHANGELOG.md](https://github.c
 
 ---
 
+## [0.3.0] — 2026-05-29
+
+Research playbook mode for reproducible quant, qual, and mixed-methods analysis. Extension by [Clare Reddan](https://github.com/c44-ux).
+
+### Added
+
+- **Research playbook mode** — triggers (`synopsis this research`, `document this analysis for next time`, qual variants) and `@chat-synopsis research`.
+- **Extended output template** — Research decisions, Inputs & artefacts, Method steps (quant and/or qual rerun checklists), What changed vs last wave, Next wave playbook.
+- **`research_type`** frontmatter: `survey-analysis`, `qual-analysis`, `mixed-methods`.
+- **Qual analysis support** — codebook/theme rules, quote policy, participant scope, saturation notes, anonymisation in privacy pass, qual rerun checklist.
+- **Research anchors** in salience check — definitions, denominators, filters, tool chains, deliverable routing (procedure-only wrap-ups valid).
+- **`prior_playbook`** linking for longitudinal studies (new wave / interview round).
+- **`references/examples-research.md`** — quant, qual, and mixed-methods worked examples.
+- **`references/research-playbook.md`** — folder layout and integration with evidence-based-behaviour-archetype-creation and uxr-planner.
+- **`research_playbook_folder`** in destinations (e.g. `.cursor/research-playbooks/`).
+- **`commands/research-synopsis.md`** — bundled command template for project repos.
+
+### Changed
+
+- Version 0.2.1 → **0.3.0**; skill description includes research triggers.
+- First-run wizard adds **Research playbooks** destination option (6).
+- Research playbook filename convention: `YYYY-MM-DD-{study-id}-{topic-slug}.md`.
+
+---
+
 ## [0.2.1] — 2026-05-29
 
 Cursor port by [Clare Reddan](https://github.com/c44-ux). Based on upstream **v0.1.0** (MIT).
