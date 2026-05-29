@@ -1,16 +1,16 @@
-# Research playbook — integration guide
+# Method playbook — integration guide
 
-How **chat-synopsis** research mode fits alongside other Research-Skills and a repeatable study workflow.
+How **method-synopsis** reproducibility mode fits alongside other Research-Skills and a repeatable study workflow.
 
 ---
 
 ## Recommended ritual
 
 ```text
-Plan study → Collect data → Analyse in Cursor → research-synopsis → Save playbook → Next wave reads prior playbook
+Plan study → Collect data → Analyse in Cursor → method-synopsis → Save playbook → Next wave reads prior playbook
 ```
 
-Run **research-synopsis** (or "synopsis this research") **after** analysis is complete — not mid-exploration.
+Run **method-synopsis** (or "method synopsis this research") **after** analysis is complete — not mid-exploration.
 
 ---
 
@@ -19,12 +19,11 @@ Run **research-synopsis** (or "synopsis this research") **after** analysis is co
 ```text
 .cursor/
 ├── skills/
-│   └── chat-synopsis/
+│   └── method-synopsis/
 ├── commands/
-│   ├── synopsis.md              # general capture
-│   └── research-synopsis.md     # research playbook mode
-├── chat-synopses/               # general thinking synopses (optional)
-└── research-playbooks/          # study rerun docs (recommended)
+│   └── method-synopsis.md       # reproducibility mode command
+├── method-synopses/             # general method synopses (optional)
+└── method-playbooks/            # rerunnable study docs (recommended)
     ├── 2026-05-22-cxr004-high-volume-span-analysis.md
     └── 2026-08-15-cxr004-sme-interview-synthesis-round1.md
 ```
@@ -33,19 +32,19 @@ Configure in [destinations.md](destinations.md):
 
 ```markdown
 | destination_type | project |
-| path_or_id | .cursor/chat-synopses |
-| research_playbook_folder | .cursor/research-playbooks |
+| path_or_id | .cursor/method-synopses |
+| method_playbook_folder | .cursor/method-playbooks |
 ```
 
-Research mode saves to `research_playbook_folder` when set.
+Reproducibility mode saves to `method_playbook_folder` when set.
 
 ---
 
 ## Integration with other Research-Skills
 
-| Skill | When to run research-synopsis | Capture in playbook |
-|-------|------------------------------|---------------------|
-| **[evidence-based-behaviour-archetype-creation](../../evidence-based-behaviour-archetype-creation/)** — quant | After survey Phase 3 scripts and segment reports | Column mapping path, script commands, segment rules, output `.json`/`.md` paths |
+| Skill | When to run method-synopsis | Capture in playbook |
+|-------|----------------------------|---------------------|
+| **[evidence-based-behaviour-archetype-creation](../../evidence-based-behaviour-archetype-creation/)** — quant | After survey Phase 3 scripts and segment reports | Column mapping path, script commands, segment rules, output paths |
 | **[evidence-based-behaviour-archetype-creation](../../evidence-based-behaviour-archetype-creation/)** — qual | After thematic/archetype synthesis from transcripts | Participant scope, codebook, quote policy, Miro board URL |
 | **uxr-planner** (if installed) | After study plan published or analysis complete | Confluence page ID, research questions, method, study ID |
 
@@ -67,7 +66,7 @@ prior_playbook: 2026-05-22-cxr004-high-volume-span-analysis.md
 | **qual-analysis** | Transcripts, interviews, themes, quotes | Scope, codebook, anonymisation, saturation, Miro/Confluence routing |
 | **mixed-methods** | Both in one study | Separate quant and qual rerun sections; triangulation rules explicit |
 
-User can say **"synopsis this qual analysis"** to force qual framing even if quant was discussed earlier in the thread.
+User can say **"method synopsis this qual analysis"** to force qual framing.
 
 ---
 
@@ -77,7 +76,7 @@ When a new survey wave or interview round arrives:
 
 1. Open or @mention the **prior playbook** for the same `study_id`.
 2. Run analysis in a new Cursor chat.
-3. Trigger **research-synopsis** — agent populates **What changed vs last wave**.
+3. Trigger **method-synopsis** — agent populates **What changed vs last wave**.
 4. Save with new date prefix; set `prior_playbook` to previous filename.
 
 Filename pattern: `YYYY-MM-DD-{study-id}-{topic-slug}.md` or `…-wave4.md`, `…-round2.md`.
@@ -88,6 +87,6 @@ Filename pattern: `YYYY-MM-DD-{study-id}-{topic-slug}.md` or `…-wave4.md`, `�
 
 - Anonymise participant and business identifiers in playbooks intended for shared repos.
 - Keep raw transcripts outside git when they contain PII.
-- Playbooks in `.cursor/research-playbooks/` may be committed for team reproducibility — use redaction and synthetic labels.
+- Playbooks in `.cursor/method-playbooks/` may be committed for team reproducibility — use redaction and synthetic labels.
 
 See [privacy.md](privacy.md).

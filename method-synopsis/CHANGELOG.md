@@ -6,6 +6,26 @@ Upstream history: [vanessachang-dev/chat-synopsis/CHANGELOG.md](https://github.c
 
 ---
 
+## [0.4.0] — 2026-05-29
+
+Renamed **chat-synopsis** → **method-synopsis** for reproducible research methods. Extension by [Clare Reddan](https://github.com/c44-ux).
+
+### Changed
+
+- Skill name, folder, @mention, and command: **method-synopsis**.
+- Triggers reframed around **method synopsis** (e.g. `method synopsis this research`, `document this method for next time`).
+- Output folders: `.cursor/method-synopses/`, `.cursor/method-playbooks/`.
+- Destination field: `method_playbook_folder` (was `research_playbook_folder`).
+- Frontmatter tags: `method-synopsis`, `method-playbook`.
+- Reference doc renamed: `method-playbook.md` (was `research-playbook.md`).
+- Command: `method-synopsis.md` (was `research-synopsis.md`).
+
+### Added
+
+- **Lineage** section in SKILL.md — credits Vanessa Chang upstream; documents rename rationale.
+
+---
+
 ## [0.3.0] — 2026-05-29
 
 Research playbook mode for reproducible quant, qual, and mixed-methods analysis. Extension by [Clare Reddan](https://github.com/c44-ux).
