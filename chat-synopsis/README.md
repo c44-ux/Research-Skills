@@ -59,8 +59,26 @@ First run asks where to save (Obsidian path, local folder, project folder, etc.)
 chat-synopsis/
 ├── SKILL.md
 ├── README.md
+├── CHANGELOG.md
+├── LICENSE
 └── references/
     ├── destinations.md   # your default save location
     ├── examples.md       # AAA discipline examples
     └── privacy.md        # redaction limitations
 ```
+
+## Credits
+
+Adapted from **[chat-synopsis](https://github.com/vanessachang-dev/chat-synopsis)** by [Vanessa Chang](https://vanessachang.com) (MIT License). See [LICENSE](LICENSE).
+
+**Cursor port (v0.2.1)** by [Clare Reddan](https://github.com/c44-ux). Changes from upstream v0.1.0:
+
+- **Runtime** — Claude Code / Claude.ai → Cursor Agent mode and Ask/read-only mode.
+- **Triggers** — `@chat-synopsis` @mention; optional `.cursor/commands/synopsis.md` command entry.
+- **Destinations** — project folder (`.cursor/chat-synopses/`); Windows path examples; explicit Cursor `Write`-tool save table.
+- **Troubleshooting** — Agent vs Ask, personal install at `~/.cursor/skills/`, reload after updates.
+- **Packaging** — republished in [Research-Skills](https://github.com/c44-ux/Research-Skills) with Cursor install docs.
+
+Full change list: [CHANGELOG.md](CHANGELOG.md).
+
+Upstream: https://github.com/vanessachang-dev/chat-synopsis · https://vanessachang.com/chat-synopsis
