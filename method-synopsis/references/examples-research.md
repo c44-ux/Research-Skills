@@ -7,7 +7,7 @@ Load-bearing positive/negative pairs for **research mode**. Use alongside [examp
 ## When to use research mode
 
 **Good trigger timing:**
-> Analysis session complete; user says "synopsis this research" before closing the chat.
+> Analysis session complete; user says "method synopsis this research" before closing the session.
 
 **Bad timing:**
 > Mid-exploration, no decisions locked yet — playbook would be premature.
