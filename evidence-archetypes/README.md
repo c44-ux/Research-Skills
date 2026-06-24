@@ -1,4 +1,4 @@
-# Evidence-based behaviour archetype creation (UX)
+# Evidence Archetypes (UX)
 
 Cursor skill for **UX and product research**: build **your** segment-level **behaviour archetypes** from **your** surveys and/or interviews — any domain.
 
@@ -31,9 +31,9 @@ git clone https://github.com/c44-ux/Research-Skills.git `
   "$env:USERPROFILE\.cursor\skills\Research-Skills"
 ```
 
-Use folder: `Research-Skills/evidence-based-behaviour-archetype-creation/`
+Use folder: `Research-Skills/evidence-archetypes/`
 
-Optional: copy that folder to `%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation\` if you prefer a flat skills path (update paths in commands accordingly).
+Optional: copy that folder to `%USERPROFILE%\.cursor\skills\evidence-archetypes\` if you prefer a flat skills path (update paths in commands accordingly).
 
 ## How researchers use it
 
@@ -57,7 +57,7 @@ pip install -r requirements.txt
 Also install sibling skill **`cs-ux-personas`** next to this folder under `.cursor\skills\`.
 
 ```powershell
-cd path\to\evidence-based-behaviour-archetype-creation
+cd path\to\evidence-archetypes
 
 # 1) Create mapping template from YOUR export
 python scripts/phase3_from_survey_xlsx.py --export-mapping-template "C:\path\to\survey.xlsx"
@@ -94,7 +94,7 @@ Phase 3 uses `PersonaGenerator` from sibling skill **`cs-ux-personas`**:
 
 ```text
 .cursor/skills/
-  evidence-based-behaviour-archetype-creation/
+  evidence-archetypes/
   cs-ux-personas/
 ```
 

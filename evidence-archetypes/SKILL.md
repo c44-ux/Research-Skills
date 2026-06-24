@@ -1,10 +1,10 @@
 ---
-name: evidence-based-behaviour-archetype-creation
+name: evidence-archetypes
 description: UX research skill — create evidence-based behaviour archetypes from surveys, interviews, or mixed methods; synthesise locally then publish to Miro (Miro delivery via Miro MCP). Use for user research synthesis, audience patterns, behavioural segments, or when the user says persona/archetype and provides study materials (any product domain).
 disable-model-invocation: true
 ---
 
-# Evidence-Based Behaviour Archetype Creation (UX)
+# Evidence Archetypes (UX)
 
 ## Purpose
 
@@ -54,7 +54,7 @@ When the user supplies a **SurveyMonkey / Typeform / Qualtrics-style** `.xlsx` o
 **Python prerequisites (one-time per machine)** — survey scripts need `pandas` and `openpyxl`. If the user has not installed them, say so explicitly and give:
 
 ```powershell
-cd "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation"
+cd "%USERPROFILE%\.cursor\skills\evidence-archetypes"
 pip install -r requirements.txt
 ```
 
@@ -65,7 +65,7 @@ Also requires sibling skill **`cs-ux-personas`** (for `PersonaGenerator`).
 1. Generate a per-study column map (once per file):
 
 ```powershell
-python "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation\scripts\phase3_from_survey_xlsx.py" --export-mapping-template "C:\path\to\survey.xlsx"
+python "%USERPROFILE%\.cursor\skills\evidence-archetypes\scripts\phase3_from_survey_xlsx.py" --export-mapping-template "C:\path\to\survey.xlsx"
 ```
 
 2. User edits `<survey>.column_mapping.csv` in Excel — map **their** question headers to generic fields (`segment_primary`, `usage_context`, `goals`, `pain_contains`, etc.). No bundled maps ship with this skill.
@@ -73,7 +73,7 @@ python "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation
 3. Run Phase 3:
 
 ```powershell
-python "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation\scripts\phase3_from_survey_xlsx.py" "C:\path\to\survey.xlsx"
+python "%USERPROFILE%\.cursor\skills\evidence-archetypes\scripts\phase3_from_survey_xlsx.py" "C:\path\to\survey.xlsx"
 ```
 
 Outputs beside the survey: `*.behaviour_archetype_phase3.md` and `*.behaviour_archetype_phase3.analysis.json`.
@@ -81,8 +81,8 @@ Outputs beside the survey: `*.behaviour_archetype_phase3.md` and `*.behaviour_ar
 Optional segment reports (after mapping a segment column):
 
 ```powershell
-python "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation\scripts\phase3_from_survey_xlsx.py" --segment-pains "C:\path\to\survey.xlsx"
-python "%USERPROFILE%\.cursor\skills\evidence-based-behaviour-archetype-creation\scripts\phase3_from_survey_xlsx.py" --segment-detail "C:\path\to\survey.xlsx"
+python "%USERPROFILE%\.cursor\skills\evidence-archetypes\scripts\phase3_from_survey_xlsx.py" --segment-pains "C:\path\to\survey.xlsx"
+python "%USERPROFILE%\.cursor\skills\evidence-archetypes\scripts\phase3_from_survey_xlsx.py" --segment-detail "C:\path\to\survey.xlsx"
 ```
 
 Segment **labels** are read from survey answers — never hard-coded.
@@ -147,6 +147,7 @@ Markdown with:
 
 ## Trigger cues
 
+- `@evidence-archetypes` / evidence-archetypes skill
 - behaviour archetype / evidence-based archetype  
 - UX research synthesis / user research synthesis  
 - audience definition / behavioural segments  

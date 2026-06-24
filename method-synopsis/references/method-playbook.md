@@ -44,15 +44,15 @@ Reproducibility mode saves to `method_playbook_folder` when set.
 
 | Skill | When to run method-synopsis | Capture in playbook |
 |-------|----------------------------|---------------------|
-| **[evidence-based-behaviour-archetype-creation](../../evidence-based-behaviour-archetype-creation/)** — quant | After survey Phase 3 scripts and segment reports | Column mapping path, script commands, segment rules, output paths |
-| **[evidence-based-behaviour-archetype-creation](../../evidence-based-behaviour-archetype-creation/)** — qual | After thematic/archetype synthesis from transcripts | Participant scope, codebook, quote policy, Miro board URL |
+| **[evidence-archetypes](../../evidence-archetypes/)** — quant | After survey Phase 3 scripts and segment reports | Column mapping path, script commands, segment rules, output paths |
+| **[evidence-archetypes](../../evidence-archetypes/)** — qual | After thematic/archetype synthesis from transcripts | Participant scope, codebook, quote policy, Miro board URL |
 | **uxr-planner** (if installed) | After study plan published or analysis complete | Confluence page ID, research questions, method, study ID |
 
 **Cross-link in frontmatter:**
 
 ```yaml
 skills_used:
-  - evidence-based-behaviour-archetype-creation
+  - evidence-archetypes
 prior_playbook: 2026-05-22-cxr004-high-volume-span-analysis.md
 ```
 

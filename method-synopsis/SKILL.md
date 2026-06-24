@@ -126,7 +126,7 @@ Before generating the synopsis, scan the conversation for **anchors**:
 | **Definition locked** | "Span = calendar days from timestamp, not sessions" | "Theme = behaviour pattern across ≥3 participants" |
 | **Denominator / scope** | "Percentages use n=3,211 chat-active only" | "Synthesis covers n=12 interviews, Wave 3 SMEs only" |
 | **Filter / cohort rule** | "High-volume = 5+ queries" | "Exclude pilot participants; include only completed 45-min sessions" |
-| **Tool / skill chain** | "Ran `segment_pains.py` → archetype cards" | "Used evidence-based-behaviour-archetype-creation qual path → Miro board" |
+| **Tool / skill chain** | "Ran `segment_pains.py` → archetype cards" | "Used evidence-archetypes qual path → Miro board" |
 | **Quote / evidence rule** | "Counts from workbook column X only" | "Real quotes only; anonymise business names; no invented 'representative' quotes" |
 | **Codebook / theme decision** | — | "Merged 'payroll stress' and 'payday anxiety' into single theme" |
 | **Deliverable routing** | "Tables in chat only; no HTML update" | "Themes to Confluence; quotes in appendix; Miro for stakeholder readout" |

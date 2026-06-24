@@ -39,7 +39,7 @@ Research playbook mode for reproducible quant, qual, and mixed-methods analysis.
 - **Research anchors** in salience check — definitions, denominators, filters, tool chains, deliverable routing (procedure-only wrap-ups valid).
 - **`prior_playbook`** linking for longitudinal studies (new wave / interview round).
 - **`references/examples-research.md`** — quant, qual, and mixed-methods worked examples.
-- **`references/research-playbook.md`** — folder layout and integration with evidence-based-behaviour-archetype-creation and uxr-planner.
+- **`references/research-playbook.md`** — folder layout and integration with evidence-archetypes and uxr-planner.
 - **`research_playbook_folder`** in destinations (e.g. `.cursor/research-playbooks/`).
 - **`commands/research-synopsis.md`** — bundled command template for project repos.
 

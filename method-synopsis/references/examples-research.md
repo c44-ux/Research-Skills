@@ -64,7 +64,7 @@ Load-bearing positive/negative pairs for **research mode**. Use alongside [examp
 > 1. Save new transcripts to `{study-id}/interviews/round-{N}/` with filename `{participant-id}-{YYYYMMDD}.md`.
 > 2. Confirm exclusion rules (pilots, incomplete sessions) before synthesis.
 > 3. Load prior codebook from last playbook or `{study-id}-codebook.md`; log theme merges/splits in Research decisions.
-> 4. Synthesise themes using evidence-based-behaviour-archetype-creation qual path; mark segments where saturation is unclear.
+> 4. Synthesise themes using evidence-archetypes qual path; mark segments where saturation is unclear.
 > 5. Route deliverables: themes → Confluence page; supporting quotes → appendix; stakeholder readout → Miro (user's board via Miro MCP).
 > 6. Do not triangulate with survey counts unless user explicitly directs merge.
 
@@ -131,7 +131,7 @@ study_id: CXR004
 research_type: qual-analysis
 wave: Round 1
 skills_used:
-  - evidence-based-behaviour-archetype-creation
+  - evidence-archetypes
 ---
 
 ## Research decisions (reproducibility)
