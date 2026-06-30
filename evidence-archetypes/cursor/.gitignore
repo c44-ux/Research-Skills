@@ -1,0 +1,15 @@
+__pycache__/
+*.py[cod]
+.env
+*.log
+.DS_Store
+Thumbs.db
+
+# Survey data — never commit client exports
+*.xlsx
+*.xls
+*.csv
+!assets/*.csv
+
+# Local helpers not for the repo
+scripts/_copy_phase3.py
