@@ -2,7 +2,7 @@
 
 Use this after behaviour archetype synthesis is complete (survey Phase 3 markdown/JSON, or interview-led markdown from the agent).
 
-Miro is **not** updated by `git push`. The Cursor agent writes to **the user’s own Miro workspace** using **Miro MCP** (after the user is signed in to Miro in Cursor).
+Miro is **not** updated by `git push`. Claude writes to **the user’s own Miro workspace** using **Miro MCP** (after the user is signed in to Miro and the connector is enabled).
 
 ## For general users — do I need a board already?
 
