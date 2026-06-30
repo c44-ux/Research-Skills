@@ -16,6 +16,16 @@ Run **method-synopsis** (or "method synopsis this research") **after** analysis 
 
 ## Folder layout (project repo)
 
+**In Research-Skills (source):**
+
+```text
+method-synopsis/
+├── cursor/                          # Cursor variant → .cursor/skills/method-synopsis/
+└── claude/                          # Claude variant → .claude/skills/method-synopsis/
+```
+
+**After install (Cursor project):**
+
 ```text
 .cursor/
 ├── skills/

@@ -6,6 +6,22 @@ Upstream history: [vanessachang-dev/chat-synopsis/CHANGELOG.md](https://github.c
 
 ---
 
+## [0.4.1] — 2026-06-30
+
+Research-Skills repo layout update by [Clare Reddan](https://github.com/c44-ux).
+
+### Changed
+
+- Cursor variant moved to **`method-synopsis/cursor/`** in [Research-Skills](https://github.com/c44-ux/Research-Skills) for clarity alongside new Claude variant at `method-synopsis/claude/`.
+- README install paths updated (`method-synopsis/cursor/` → `.cursor/skills/method-synopsis/`).
+- SKILL.md title and description note this is the **Cursor variant**.
+
+### Added
+
+- Parent [`method-synopsis/README.md`](../README.md) — platform picker for Cursor vs Claude.
+
+---
+
 ## [0.4.0] — 2026-05-29
 
 Renamed **chat-synopsis** → **method-synopsis** for reproducible research methods. Extension by [Clare Reddan](https://github.com/c44-ux).

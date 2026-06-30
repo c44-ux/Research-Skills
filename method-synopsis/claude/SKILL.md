@@ -1,26 +1,26 @@
 ---
 name: method-synopsis
 description: >-
-  Captures a Cursor session as a durable method synopsis for reproducibility
-  (arc, attribution, standalone artifact)—not a transcript. Invoke immediately when
-  the user says "method synopsis," "method synopsis this research," "method synopsis
+  Captures a Claude session as a durable method synopsis for reproducibility
+  (arc, attribution, standalone artifact)—not a transcript. Invoke when the
+  user says "method synopsis," "method synopsis this research," "method synopsis
   this qual analysis," "document this method for next time," "preserve what we
-  figured out," @mentions method-synopsis, or runs the method-synopsis command.
-  Reproducibility mode documents rerunnable quant/qual/mixed-method playbooks.
-  Do not use for generic summaries or transcript requests. Salience filter for
-  reframes, decisions, and insights worth keeping.
-version: 0.4.0
+  figured out," or runs /method-synopsis. Reproducibility mode documents
+  rerunnable quant/qual/mixed-method playbooks. Do not use for generic summaries
+  or transcript requests.
 ---
 
-# Method Synopsis
+# Method Synopsis (Claude)
 
-Capture a Cursor session as a durable **method synopsis** — documentation of what was done, decided, and produced so the work can be reproduced. Three things get preserved:
+Capture a Claude session as a durable **method synopsis** to document what was done, decided, and produced so the work can be reproduced. Three things get preserved:
 
 1. **Arc** — how the session unfolded: where it started, where it shifted, where it landed. Not a chronological list of events.
-2. **Attribution** — who contributed what. The user's contributions and the assistant's contributions are named, not collapsed into "we."
-3. **Artifact** — a self-contained markdown file that stands alone, routed to the user's configured destination (Obsidian vault folder, local path, Notion, Drive, or chat output).
+2. **Attribution** — who contributed what. The user's contributions and Claude's contributions are named, not collapsed into "we."
+3. **Artifact** — a self-contained markdown file that stands alone, routed to the user's configured destination (Obsidian vault folder, local path, project folder, or chat output).
 
 This is a salience filter, not a transcript. Capture the moments that produced new thinking — reframes, decisions, insights, and **locked method choices** — not every exchange.
+
+**Upstream:** [Research-Skills/method-synopsis/claude/](https://github.com/c44-ux/Research-Skills/tree/main/method-synopsis/claude). **Cursor variant:** [method-synopsis/cursor/](../cursor/).
 
 ---
 
@@ -33,24 +33,19 @@ Activate **only** on these natural-language phrases (or a per-run override of th
 - "document this method"
 - "preserve what we figured out" / "save what we figured out"
 
-**Reproducibility mode** (activates method playbook output — see below):
+**Reproducibility mode** (activates method playbook output):
 - "method synopsis this research"
 - "document this method for next time"
 - "method synopsis this qual analysis" / "method synopsis this interview analysis"
-- `@method-synopsis research` (reproducibility mode via @mention variant)
+- `/method-synopsis` (if command installed — see [commands/method-synopsis.md](commands/method-synopsis.md))
 
-In Cursor, @mentioning **`method-synopsis`** (or this `SKILL.md`) always activates the workflow. Optional command:
-- **`method-synopsis`** — reproducibility mode (`.cursor/commands/method-synopsis.md` or copy from [`commands/method-synopsis.md`](commands/method-synopsis.md))
-
-**Do not activate without an explicit trigger** — but trigger phrases and @mentions count as explicit.
+**Do not activate without an explicit trigger.**
 
 ### If the skill does not run in a new chat
 
-1. **Agent mode** — saving needs the Write tool; Ask/read-only mode can only preview in chat.
-2. **@mention** — type `@` → Skills → **method-synopsis** (most reliable in any project).
-3. **Personal install** — skill must live at `%USERPROFILE%\.cursor\skills\method-synopsis\`.
-4. **Reload** — after installing or updating, start a **new** Agent chat (or restart Cursor).
-5. **No `disable-model-invocation`** — this skill is designed to load on trigger phrases; if an old copy still has that flag, remove it and re-copy the folder.
+1. **Claude Desktop / CoWork** — upload the skill zip (see [README.md](README.md)); toggle it **on** in Customize → Skills.
+2. **Claude Code** — skill must live in `.claude/skills/method-synopsis/` (project) or `~/.claude/skills/method-synopsis/` (personal).
+3. **Reload** — start a new chat after installing or updating the skill.
 
 ---
 
@@ -59,7 +54,7 @@ In Cursor, @mentioning **`method-synopsis`** (or this `SKILL.md`) always activat
 | Mode | When | Output focus |
 |------|------|----------------|
 | **General** | Default triggers | AAA synopsis — thinking, decisions, insights |
-| **Reproducibility** | Research/method triggers or `method-synopsis` command | AAA + rerunnable method — definitions, inputs, rerun checklist, wave diff |
+| **Reproducibility** | Research/method triggers or `/method-synopsis` | AAA + rerunnable method — definitions, inputs, rerun checklist, wave diff |
 
 Reproducibility mode still uses the salience filter. It **adds** procedural capture; it does not become a transcript.
 
@@ -81,36 +76,39 @@ Load [references/examples-research.md](references/examples-research.md) for quan
 
 ### Step 1 — Surface detection
 
-Detect what the current Cursor session can do:
+Detect what the current Claude session can do:
 
 | Surface | When | Destinations |
 |--------|------|----------------|
-| **Agent mode** | Write tool and shell available | Obsidian (vault path), project or local file (`Write`), method playbooks folder, Notion/Drive (MCP if installed), show in chat + user copies |
-| **Ask / read-only** | No file writes | Show full markdown in chat; offer clipboard copy; Notion/Drive only if MCP works without writes |
+| **Claude Code** | Bash / file tools available | Obsidian (vault path), project or local file, method playbooks folder, show in chat |
+| **Claude Desktop / CoWork** | Code execution enabled | Same as above via file write; otherwise chat output + user copies |
+| **Chat-only** | No file write capability | Show full markdown in chat; offer clipboard copy |
 
 Surface awareness only affects which destinations are *offered*. The artifact format (markdown) is the same everywhere.
 
-**Default `source` in frontmatter:** `Cursor`.
+**Default `source` in frontmatter:** `Claude`.
 
 **Reproducibility mode save path:** If `method_playbook_folder` is set in [references/destinations.md](references/destinations.md), save method playbooks there; otherwise use the default destination with tag `method-playbook`.
 
 ### Step 2 — First-run wizard (if no destination configured)
 
-Read [references/destinations.md](references/destinations.md). If **Configured Defaults** is empty or still has placeholder values, run the setup wizard inline before continuing:
+Read [references/destinations.md](references/destinations.md). If **Configured Defaults** is empty or still has placeholder values, run the setup wizard inline before continuing.
 
-> "Looks like this is your first time running method-synopsis. Where should your method synopses live? You'll only set this once.
+Claude has no structured AskQuestion tool. Present **numbered options in one message**, then **stop and wait** for the user's reply:
+
+> Looks like this is your first time running method-synopsis. Where should your method synopses live? You'll only set this once.
 >
 > 1. **Obsidian** — paste the absolute path to the folder in your vault (e.g. `C:\Users\you\Documents\Obsidian\MyVault\Method-Synopses`).
-> 2. **Notion** — paste a Notion database URL or share-link; extract the database ID for MCP.
-> 3. **Google Drive** — paste a folder URL or ID (Drive MCP if installed).
-> 4. **Local file** — synopses save under `~/method-synopses/` (Windows: `%USERPROFILE%\method-synopses\`).
-> 5. **Project folder** — synopses save under `.cursor/method-synopses/` in the workspace (good for team repos).
-> 6. **Method playbooks** — rerunnable study docs under `.cursor/method-playbooks/` (recommended for quant/qual analysis wrap-up).
-> 7. **Skip for now** — use chat output only this run; configure later in `references/destinations.md`."
+> 2. **Local file** — synopses save under `~/method-synopses/` (Windows: `%USERPROFILE%\method-synopses\`).
+> 3. **Project folder** — synopses save under `.claude/method-synopses/` in the workspace (good for team repos).
+> 4. **Method playbooks** — rerunnable study docs under `.claude/method-playbooks/` (recommended for quant/qual analysis wrap-up).
+> 5. **Skip for now** — use chat output only this run; configure later in `references/destinations.md`.
 
-When the user picks a destination, update **Configured Defaults** in `references/destinations.md`. If they chose method playbooks, also set `method_playbook_folder`. Confirm in one sentence where the default was saved.
+When the user picks a destination:
+- **Claude Code:** update **Configured Defaults** in `references/destinations.md` via file edit.
+- **Claude Desktop:** confirm the path in chat; user may need to edit `destinations.md` manually or tell Claude the path each run.
 
-Then continue with Step 3.
+Confirm in one sentence where the default was saved. Then continue with Step 3.
 
 ### Step 3 — Salience check
 
@@ -148,7 +146,7 @@ Apply Arc / Attribution / Artifact discipline. See [references/examples.md](refe
 
 #### Prior playbook (reproducibility mode only)
 
-If a prior playbook for the same `study_id` exists, read it if accessible. Populate **What changed vs last wave**. Set `prior_playbook` in frontmatter to the prior filename.
+If a prior playbook for the same `study_id` exists, read it if accessible (typically in `.claude/method-playbooks/`). Populate **What changed vs last wave**. Set `prior_playbook` in frontmatter to the prior filename.
 
 ### Output structure — general mode
 
@@ -158,7 +156,7 @@ If a prior playbook for the same `study_id` exists, read it if accessible. Popul
 ---
 title: "[Primary Topic]"
 date: YYYY-MM-DD
-source: Cursor
+source: Claude
 project: [if applicable]
 tags:
   - method-synopsis
@@ -173,8 +171,6 @@ tags:
 ## Next Steps
 ```
 
-(Section content unchanged from AAA discipline — see v0.3.0 examples.)
-
 ### Output structure — reproducibility mode
 
 Use when reproducibility mode is active. **Omit empty sections.**
@@ -183,7 +179,7 @@ Use when reproducibility mode is active. **Omit empty sections.**
 ---
 title: "[Study ID] — [Topic]"
 date: YYYY-MM-DD
-source: Cursor
+source: Claude
 study_id: CXR###
 wave: [Wave 3 | Round 2 | null]
 research_type: survey-analysis | qual-analysis | mixed-methods
@@ -214,17 +210,22 @@ tags:
 ## Next wave playbook
 ```
 
-(Full section guidance unchanged — quant/qual/mixed table applies.)
-
 ### Step 6 — Mandatory preview, then save
 
 Show rendered markdown; wait for Accept, Edit, or Cancel.
 
 | Destination | Action |
 |-------------|--------|
-| Obsidian / local / project path | `Write` to `{folder}/YYYY-MM-DD-{slug}.md` |
-| Method playbooks | `Write` to `{method_playbook_folder}/YYYY-MM-DD-{study-id}-{slug}.md` |
-| Chat only / Clipboard / Notion / Drive | As in v0.3.0 |
+| Obsidian / local / project path | Write `{folder}/YYYY-MM-DD-{slug}.md` (Claude Code: bash; Desktop: file tool if available) |
+| Method playbooks | Write `{method_playbook_folder}/YYYY-MM-DD-{study-id}-{slug}.md` |
+| Chat only / Clipboard | Full markdown in chat; user copies manually |
+
+**Claude Code save example:**
+
+```bash
+mkdir -p .claude/method-playbooks
+# Write file contents to .claude/method-playbooks/YYYY-MM-DD-study-id-topic.md
+```
 
 ---
 
@@ -238,13 +239,15 @@ Show rendered markdown; wait for Accept, Edit, or Cancel.
 
 ## Installing this skill
 
-**Personal:** Copy `method-synopsis` to `~/.cursor/skills/method-synopsis/`.
+**Claude Desktop / CoWork:** Zip this folder and upload via Customize → Skills. See [README.md](README.md).
 
-**Project:** `.cursor/skills/method-synopsis/` + optional [`commands/method-synopsis.md`](commands/method-synopsis.md).
+**Claude Code (project):** `.claude/skills/method-synopsis/` + optional [commands/method-synopsis.md](commands/method-synopsis.md) copied to `.claude/commands/`.
 
-**From Research-Skills:** Clone [c44-ux/Research-Skills](https://github.com/c44-ux/Research-Skills) and use `method-synopsis/`.
+**Claude Code (personal):** Copy to `~/.claude/skills/method-synopsis/`.
 
-**Workflow ritual:** When analysis is complete → **`method-synopsis`** or **"method synopsis this research"** → preview → Accept → close session.
+**From Research-Skills:** Clone [c44-ux/Research-Skills](https://github.com/c44-ux/Research-Skills) and copy `method-synopsis/claude/` to `.claude/skills/method-synopsis/`. **Cursor variant:** `method-synopsis/cursor/`.
+
+**Workflow ritual:** When analysis is complete → **`/method-synopsis`** or **"method synopsis this research"** → preview → Accept → close session.
 
 ---
 
@@ -261,4 +264,4 @@ Show rendered markdown; wait for Accept, Edit, or Cancel.
 
 ## Lineage
 
-Adapted from **[chat-synopsis](https://github.com/vanessachang-dev/chat-synopsis)** by Vanessa Chang (MIT). Renamed and extended for **reproducible research methods** by Clare Reddan (v0.4.0).
+Adapted from **[chat-synopsis](https://github.com/vanessachang-dev/chat-synopsis)** by Vanessa Chang (MIT). Extended for **reproducible research methods** by Clare Reddan (v0.4.0 Cursor). Claude port v1.0.0 — same AAA discipline and reproducibility mode; adapted for Claude Code, Desktop, and CoWork file-save surfaces.
