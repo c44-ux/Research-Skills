@@ -1,0 +1,24 @@
+name: Trigger MYOB cursor-skills sync
+
+on:
+  push:
+    branches: [main]
+    paths:
+      - "evidence-archetypes/cursor/**"
+      - "method-synopsis/cursor/**"
+
+jobs:
+  dispatch:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Trigger sync in MYOB-Technology/cursor-skills
+        env:
+          GH_TOKEN: ${{ secrets.CURSOR_SKILLS_SYNC_TOKEN }}
+        run: |
+          if [ -z "$GH_TOKEN" ]; then
+            echo "CURSOR_SKILLS_SYNC_TOKEN is not set — skipping MYOB sync."
+            exit 0
+          fi
+          gh api repos/MYOB-Technology/cursor-skills/dispatches \
+            -f event_type=sync-upstream \
+            -f "client_payload[sha]=${{ github.sha }}"
