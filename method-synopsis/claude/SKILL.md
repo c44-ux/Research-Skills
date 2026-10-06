@@ -20,7 +20,7 @@ Capture a Claude session as a durable **method synopsis** to document what was d
 
 This is a salience filter, not a transcript. Capture the moments that produced new thinking — reframes, decisions, insights, and **locked method choices** — not every exchange.
 
-**Upstream:** [Research-Skills/method-synopsis/claude/](https://github.com/c44-ux/Research-Skills/tree/main/method-synopsis/claude). **Cursor variant:** [method-synopsis/cursor/](../cursor/).
+**Upstream:** [Research-Skills/method-synopsis/claude/](https://github.com/c44-ux/Research-Skills/tree/main/method-synopsis/claude). **Cursor variant:** [method-synopsis/cursor/](https://github.com/c44-ux/Research-Skills/tree/main/method-synopsis/cursor).
 
 ---
 
