@@ -10,7 +10,7 @@ description: >-
 
 # Evidence Archetypes (Claude)
 
-**Upstream:** [Research-Skills/evidence-archetypes/claude/](https://github.com/c44-ux/Research-Skills/tree/main/evidence-archetypes/claude). **Cursor variant:** [evidence-archetypes/cursor/](../cursor/).
+**Upstream:** [Research-Skills/evidence-archetypes/claude/](https://github.com/c44-ux/Research-Skills/tree/main/evidence-archetypes/claude). **Cursor variant:** [evidence-archetypes/cursor/](https://github.com/c44-ux/Research-Skills/tree/main/evidence-archetypes/cursor).
 
 ## Purpose
 
