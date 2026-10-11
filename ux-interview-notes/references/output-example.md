@@ -1,6 +1,13 @@
 # Output example
 
-A condensed worked example showing all five sections. Participant details are fictional.
+A condensed worked example showing all five sections. All participant details,
+quotes, timestamps, and ratings are fictional illustrations, not source-verified
+interview evidence. This file has no backing transcript. Real notes must follow
+quote-policy.md for every quotation, including quotes in concept-matrix and
+synthesis cells; never copy these illustrative timestamps into a real study.
+
+The H/M/L judgments and top-pick analysis below are researcher interpretations.
+No explicit participant ranking or willingness-to-pay response is supplied here.
 
 ---
 
@@ -75,7 +82,9 @@ A condensed worked example showing all five sections. Participant details are fi
 | **Auto-match review screen** | "I don't really do that at the moment." Understood concept but low existing behaviour to build on. | M | M | L | Nice to have | Better | Would use if receipts were already uploading. Dependent on photo upload and email connection being in place first. |
 | **Cashflow / bills forecasting** | Positive on the visual. "I like the red and green." Asked if it would show payroll. | M | M | M | Nice to have | Better | Payroll visibility was the specific ask. Generic bills view less relevant. |
 
-**Top pick:** Photo upload for staff. Jordan's primary pain is the WhatsApp-to-screenshot-to-email chain. A mobile upload that goes directly to Xero would eliminate three manual steps.
+**Participant ranking:** Not stated in this fictional example.
+
+**Researcher-inferred top pick:** Photo upload for staff, based on the illustrated receipt-chain pain and immediate reaction. This is an interpretation, not an explicitly stated ranking or willingness to pay. A mobile upload that goes directly to Xero could eliminate three manual steps; actual performance requires validation.
 
 **No hard nos.**
 

@@ -73,7 +73,7 @@ Three-column table: **Theme | Key points | Quotes**
 
 Cover: how they currently manage the task being studied, who does what, tools used,
 handoffs, and any workarounds. Include one direct quote per row where possible.
-Quotes should be verbatim (or near-verbatim) and in quote marks.
+Quotes must be verbatim and in quote marks; apply the Quote rules below.
 
 #### Cadence table
 
@@ -115,8 +115,11 @@ Keep each cell concise (1-2 sentences max). The "Final Reaction" column is where
 nuance and any conditions on adoption.
 
 After the matrix, add:
-- **Participant ranking** (if given, or derived from session signals)
-- **Top pick** with reasoning
+- **Participant ranking** only if explicitly given. Otherwise state "ranking not stated".
+- **Top pick** with reasoning: distinguish an explicitly stated participant preference
+  from a researcher-inferred preference, labeling the latter as an inference and citing
+  the supporting transcript evidence. Do not turn inferred H/M/L judgments or positive
+  reactions into reported participant ratings, rankings, or willingness to pay.
 - Any hard nos, with reasoning
 
 #### Cross-concept synthesis table
@@ -158,7 +161,7 @@ Each should be named and bolded (e.g. **Notable signal: the audit requirement dr
 
 ## Quote rules
 
-Quotes must meet all three conditions:
+Quotes must meet all four conditions:
 
 1. **Verbatim only.** Reproduce the participant's exact words. Do not paraphrase, tighten,
    or clean up for readability. If the quote contains a filler word, incomplete sentence,

@@ -87,6 +87,12 @@ All quotes are:
 
 See [references/quote-policy.md](references/quote-policy.md) for full rules.
 
+Participant rankings are reported only when explicitly stated. Label inferred
+preferences and researcher ratings separately; enthusiasm does not establish
+willingness to pay. The output example is fictional, not a verified transcript.
+Use [evidence check cases](references/evidence-check-cases.md) for manual review
+of timestamped quotes, missing timestamps, and preference attribution.
+
 ---
 
 ## Layout
