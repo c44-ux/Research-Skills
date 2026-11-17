@@ -10,6 +10,8 @@ Cursor and Claude skills plus scripts for design, product, and customer research
 | **Evidence-based behaviour archetypes (Claude)** | [`evidence-archetypes/claude/`](evidence-archetypes/claude/) | Claude Code, Desktop, CoWork | Same synthesis and survey scripts as the Cursor variant; adapted for Claude surfaces and Miro connector. |
 | **Method synopsis (Cursor)** | [`method-synopsis/cursor/`](method-synopsis/cursor/) | Cursor | Document rerunnable research methods from a Cursor session (arc, attribution, reproducibility playbook). Quant, qual, or mixed-methods. |
 | **Method synopsis (Claude)** | [`method-synopsis/claude/`](method-synopsis/claude/) | Claude Code, Desktop, CoWork | Same reproducibility playbook as the Cursor variant; adapted for Claude file-save surfaces and skill upload. |
+| **UX interview notes** | [`ux-interview-notes/`](ux-interview-notes/) | Claude.ai | Researcher-ready notes from interview transcripts (VTT or plain text): behaviour, concept reactions, synthesis signals, and open questions by discipline—not a transcript summary. |
+| **Skill feedback review** | [`skill-feedback-review/`](skill-feedback-review/) | Claude Code, Claude.ai | Mine recent chats for skill friction, corrections, and praise; propose small `SKILL.md` edits for you to approve before commit. |
 
 See each skill's `README.md` for install steps, usage, and attribution.
 
